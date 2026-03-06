@@ -20,7 +20,7 @@ def fetch_articles(keyword: str, num_articles: int = 10):
             "source": a["source"]["name"],
             "description": a["description"],
             "url": a["url"],
-            "content": a["content"],  # often truncated, see Step 3
+            "content": a["content"],
             "publishedAt": a["publishedAt"]
         }
         for a in articles if a["content"]

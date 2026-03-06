@@ -4,6 +4,7 @@ import json
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
 
+# Prompt for scoring the article using Claude
 SCORING_PROMPT = """
 You are a media literacy expert. Analyze the following news article and rate its credibility.
 
@@ -41,6 +42,7 @@ Return ONLY a JSON object like this:
 }}
 """
 
+# Score the article
 def score_article(article: dict) -> dict:
     prompt = SCORING_PROMPT.format(
         title=article["title"],
