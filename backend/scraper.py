@@ -9,7 +9,9 @@ def get_full_text(url: str, char_limit: int = 3000) -> str:
     Fetch and parse full article text from a URL.
     Returns empty string on failure rather than crashing the pipeline.
     """
-    if not url or not url.startswith(("http://", "https://")):
+    if not isinstance(url, str):
+        return ""
+    if not url.startswith(("http://", "https://")):
         return ""
 
     try:

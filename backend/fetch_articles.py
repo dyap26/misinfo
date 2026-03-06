@@ -1,8 +1,15 @@
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv(".env.local")
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
 def fetch_articles(keyword: str, num_articles: int = 10):
+    if not NEWS_API_KEY:
+        raise ValueError("NEWS_API_KEY not found — check your .env.local file")
+
     url = "https://newsapi.org/v2/everything"
     params = {
         "q": keyword,

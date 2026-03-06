@@ -1,5 +1,6 @@
 import anthropic
 import json
+import os
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)

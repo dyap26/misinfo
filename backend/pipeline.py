@@ -4,7 +4,7 @@ import logging
 import time
 
 from fetch_articles import fetch_articles
-from scraper import get_content  # use the improved version with paywall handling
+from scraper import get_full_text  # use the improved version with paywall handling
 from scorer import score_article
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ SCORER_RATE_LIMIT_DELAY = 0.2  # seconds between scoring requests
 def _scrape_article(article: dict) -> dict:
     """Scrape one article, return it enriched. Never raises."""
     try:
-        text = get_content(article)
+        text = get_full_text(article)
         article["content"] = text or article.get("content") or article.get("description") or ""
     except Exception as e:
         logger.warning(f"Scrape failed for {article.get('url')}: {e}")
