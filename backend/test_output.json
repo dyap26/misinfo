@@ -1,0 +1,126 @@
+{
+  "keyword": "tariff",
+  "articles": [
+    {
+      "title": "The Supreme Court's Tariff Ruling Won't Bring Car Prices Back to Earth",
+      "source": "Wired",
+      "description": "Despite Friday's SCOTUS ruling, many tariffs affecting the auto industry will remain. So will the other dynamics that have led to today's historically high car prices.",
+      "url": "https://www.wired.com/story/the-supreme-courts-tariff-ruling-wont-bring-car-prices-back-to-earth/",
+      "content": "It has never been more expensive to buy a new car. The average transaction price last month for buyers in the United States was $48,576, up nearly a third from 2019, according to Edmunds. The afforda\u2026 [+2231 chars]",
+      "publishedAt": "2026-02-21T00:10:01Z",
+      "scores": {
+        "source_reputation": 8,
+        "evidence_quality": 8,
+        "factual_language": 8,
+        "balance": 7,
+        "logical_consistency": 8,
+        "verifiability": 9,
+        "context_and_framing": 8
+      },
+      "overall_score": 8.1,
+      "classification": "credible",
+      "reasoning": "This article demonstrates strong journalistic standards with specific data from reputable sources like Edmunds, expert commentary from industry analysts, and clear attribution of claims. The reporting maintains neutral language while providing sufficient context about tariff impacts on car pricing, though it could benefit from slightly more diverse perspectives on potential solutions.",
+      "red_flags": [
+        "Limited exploration of alternative viewpoints on tariff policy effectiveness",
+        "Could provide more detail on potential timeline for market corrections"
+      ],
+      "strengths": [
+        "Specific, verifiable data with clear attribution to Edmunds",
+        "Expert sources with relevant credentials in automotive industry",
+        "Neutral, fact-based language without sensationalism",
+        "Strong logical flow connecting tariffs to pricing impacts"
+      ]
+    },
+    {
+      "title": "Ford Had Its Biggest Net Loss Since the Recession Due To EV Troubles",
+      "source": "Gizmodo.com",
+      "description": "Now, Ford CEO is looking to see how China will \"change the game.\"",
+      "url": "https://gizmodo.com/ford-had-its-biggest-net-loss-since-the-recession-due-to-ev-troubles-2000720368",
+      "content": "Auto giant Ford reported its worst quarterly earnings in four years on Tuesday, and a net loss of $8.2 billion for 2025, the largest yet since the 2008 recession.\r\nAt least some of that is due to the\u2026 [+3272 chars]",
+      "publishedAt": "2026-02-11T01:41:22Z",
+      "scores": {
+        "source_reputation": 7,
+        "evidence_quality": 8,
+        "factual_language": 8,
+        "balance": 7,
+        "logical_consistency": 2,
+        "verifiability": 8,
+        "context_and_framing": 7
+      },
+      "overall_score": 6.8,
+      "classification": "misleading",
+      "reasoning": "While the article demonstrates solid journalistic practices with specific financial data and appropriate sourcing, it contains a critical factual error that fundamentally undermines its credibility. The article reports Ford's net loss as occurring in 2025, which creates an impossible temporal contradiction since the article is discussing quarterly earnings that have already been reported.",
+      "red_flags": [
+        "Reports financial data for 2025 when discussing already-reported quarterly earnings",
+        "Temporal impossibility undermines the entire factual foundation of the article"
+      ],
+      "strengths": [
+        "Uses specific financial figures and data points",
+        "Appears to reference actual Ford earnings reports",
+        "Maintains neutral, factual tone throughout",
+        "Provides verifiable claims about Ford's EV business challenges"
+      ]
+    },
+    {
+      "title": "They Bet Against Trump's Tariffs. Now They Stand to Make Millions",
+      "source": "Wired",
+      "description": "After the US Supreme Court struck down President Donald Trump\u2019s tariff regime, investment firms are in line for a whopping return on a niche trade.",
+      "url": "https://www.wired.com/story/they-bet-against-trumps-tariffs-now-they-stand-to-make-millions/",
+      "content": "Investment firms are on track for an enormous payday after the Supreme Court of the United States (SCOTUS) struck down President Donald Trumps signature tariff policy on Friday.\r\nWhen Trump introduce\u2026 [+2607 chars]",
+      "publishedAt": "2026-02-20T21:05:44Z",
+      "scores": {
+        "source_reputation": 8,
+        "evidence_quality": 2,
+        "factual_language": 3,
+        "balance": 4,
+        "logical_consistency": 2,
+        "verifiability": 1,
+        "context_and_framing": 2
+      },
+      "overall_score": 2.5,
+      "classification": "misinformation",
+      "reasoning": "The article contains a demonstrably false central claim that the Supreme Court struck down Trump's tariff policies, which never occurred. Despite Wired's generally solid reputation, this fundamental factual error undermines the entire premise of the story and makes key claims unverifiable.",
+      "red_flags": [
+        "False claim about Supreme Court striking down Trump tariffs",
+        "Unverifiable claims about specific investment firm payouts",
+        "Sensationalized headline suggesting confirmed profits from unverified court decision",
+        "Lack of named sources for key financial claims"
+      ],
+      "strengths": [
+        "Published by established technology publication",
+        "Uses specific financial figures where provided"
+      ]
+    },
+    {
+      "title": "Trump's Tariffs... Trump attacks the Supreme Court over tariff ban",
+      "source": "BBC News",
+      "description": "A breaking episode of Americast as POTUS takes on SCOTUS",
+      "url": "https://www.bbc.co.uk/sounds/play/p0n2d11v",
+      "content": "Available for over a year\r\nDonald Trump has called the Supreme Courts ruling blocking many of his sweeping tariffs deeply disappointing and has announced a new 10 per cent tariff on global imports.\r\n\u2026 [+1912 chars]",
+      "publishedAt": "2026-02-20T20:08:00Z",
+      "scores": {
+        "source_reputation": 8,
+        "evidence_quality": 2,
+        "factual_language": 4,
+        "balance": 3,
+        "logical_consistency": 2,
+        "verifiability": 1,
+        "context_and_framing": 2
+      },
+      "overall_score": 2.5,
+      "classification": "misinformation",
+      "reasoning": "While BBC News is a reputable source, this article contains fundamental factual errors including claims about a non-existent Supreme Court ruling blocking tariffs and Trump announcing new tariffs while out of office. The article lacks verifiable sources and contains internally inconsistent claims that cannot be substantiated.",
+      "red_flags": [
+        "Claims Supreme Court blocked Trump's tariffs with no verifiable ruling",
+        "States Trump announced new 10% tariff on global imports without evidence",
+        "No named sources or specific dates provided",
+        "Factually impossible scenario of out-of-office president implementing tariffs",
+        "Vague attribution and unsubstantiated claims throughout"
+      ],
+      "strengths": [
+        "Published by BBC News, a generally reputable outlet",
+        "Clear headline structure"
+      ]
+    }
+  ]
+}
