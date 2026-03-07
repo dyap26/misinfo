@@ -21,7 +21,7 @@ if __name__ == "__main__":
     else:
         keyword = input("Enter keyword to analyze: ").strip()
 
-    num_articles = 5  # keep it small for testing
+    num_articles = 5 # Change this later during prod
 
     print(f"\nAnalyzing '{keyword}' — fetching {num_articles} articles...\n")
 

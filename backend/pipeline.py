@@ -4,12 +4,12 @@ import logging
 import time
 
 from fetch_articles import fetch_articles
-from scraper import get_full_text  # use the improved version with paywall handling
+from scraper import get_full_text
 from scorer import score_article
 
 logger = logging.getLogger(__name__)
 
-# LLM APIs will rate-limit you if you fire 10 requests instantly
+# Prevent rate limiting
 SCORER_RATE_LIMIT_DELAY = 0.2  # seconds between scoring requests
 
 def _scrape_article(article: dict) -> dict:
@@ -28,6 +28,7 @@ def _score_article_safe(article: dict) -> Optional[dict]:
     try:
         return score_article(article)
     except Exception as e:
+        # well this sucks
         logger.warning(f"Scoring failed for '{article.get('title')}': {e}")
         return None
 
@@ -55,7 +56,6 @@ def run_pipeline(keyword: str, num_articles: int = 10) -> list[dict]:
     logger.info(f"Scraping complete. {len(enriched)}/{len(articles)} articles have content.")
 
     # Step 3: Score with rate limiting
-    # ThreadPoolExecutor is fine here but we stagger submissions to avoid burst
     scored = []
     failed = 0
 
