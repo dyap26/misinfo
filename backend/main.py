@@ -54,6 +54,7 @@ if __name__ == "__main__":
     print(f"\n{'='*60}")
     print(f"Done. {len(results)} articles analyzed.")
 
-    #with open("test_output.json", "w") as f:
-    #    json.dump({"keyword": keyword, "articles": results}, f, indent=2)
-    #print("Full output saved to test_output.json")
+    # Optionally dump full JSON to a file for inspection
+    with open("test_output.json", "w") as f:
+        json.dump({"keyword": keyword, "articles": results}, f, indent=2)
+    print("Full output saved to test_output.json")
