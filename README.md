@@ -18,7 +18,7 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 4. Ranking 
 
 **Model Configuration:**
-* Model: >claude-sonnet-4-6
+* Model: > claude-sonnet-4-6
 * Max Tokens Per Article: 800
 
 ## Getting Started
