@@ -44,3 +44,7 @@ app-example
 # generated native folders
 /ios
 /android
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]

@@ -18,8 +18,42 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 4. Ranking 
 
 **Model Configuration:**
-* Model: > claude-sonnet-4-6
+* Model: `claude-sonnet-4-6`
 * Max Tokens Per Article: 800
+
+## Scoring
+Articles are scored based off 7 factors and their respective weighting:
+1.  
+2. 
+3. 
+4. 
+5. 
+6. 
+7. 
+
+
+## Project Structure
+
+```
+backend/
+├── fetch_articles.py          # Article fetch
+├── main.py                    # Main testpoint
+├── pipeline.py                # Main pipeline
+├── scorer.py                  # AI scorer
+├── scraper.py                 # Article scraper
+src/
+├── app/
+│   ├── api/
+│   │   └── process-article/
+│   │       └── route.ts       # AI agent API endpoint
+│   ├── layout.tsx             # Root layout with PostHog provider
+│   ├── page.tsx               # Main UI (SmartStorySuite component)
+│   └── globals.css            # Tailwind config and theme variables
+├── components/
+│   └── PostHogProvider.tsx    # Analytics context wrapper
+└── lib/
+    └── posthog.ts             # PostHog client initialization
+```
 
 ## Getting Started
 1. Install dependencies
