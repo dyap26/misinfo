@@ -1,8 +1,9 @@
 import requests
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 
-load_dotenv(".env.local")
+load_dotenv(Path(__file__).resolve().parent / ".env.local")
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
