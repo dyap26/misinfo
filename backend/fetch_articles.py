@@ -3,7 +3,8 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 
-load_dotenv(Path(__file__).resolve().parent / ".env.local")
+# Point to project root instead
+load_dotenv(Path(__file__).resolve().parent.parent / ".env.local")
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
