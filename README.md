@@ -1,5 +1,4 @@
 # Misinformation App
-
 A mobile app dedicated to reviewing news articles for misinformation using Claude AI.
 
 ## Tech Stack
@@ -7,7 +6,7 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 * Python 
 
 **AI and Content Processing**
-* **Anthropic SDK (v0.84.0)** - Claude API Integration\
+* **Anthropic SDK (v0.84.0)** - Claude API Integration <br>
 [NewsAPI](https://newsapi.org/)
 
 ## Architecture
@@ -19,8 +18,8 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 4. Ranking 
 
 **Model Configuration:**
-* Model: 
-* Max Tokens: 
+* Model: >claude-sonnet-4-6
+* Max Tokens Per Article: 800
 
 ## Getting Started
 1. Install dependencies
@@ -28,7 +27,7 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 npm install
 pip install -r requirements.txt
 ```
-2. Fill Environment Variables
+2. Fill Environment Variables <br>
 Create a ```bash .env.local``` file with the following variables:
 ```bash
 NEWS_API_KEY = your_news_api_key
