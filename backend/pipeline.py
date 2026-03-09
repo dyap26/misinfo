@@ -9,8 +9,8 @@ from scorer import score_article
 
 logger = logging.getLogger(__name__)
 
-# Prevent rate limiting
 SCORER_RATE_LIMIT_DELAY = 0.2  # seconds between scoring requests
+
 
 def _scrape_article(article: dict) -> dict:
     """Scrape one article, return it enriched. Never raises."""
@@ -26,9 +26,11 @@ def _scrape_article(article: dict) -> dict:
 def _score_article_safe(article: dict) -> Optional[dict]:
     """Score one article. Returns None on failure so pipeline keeps running."""
     try:
+        time.sleep(SCORER_RATE_LIMIT_DELAY)
         return score_article(article)
     except Exception as e:
-        # well this sucks
+        import traceback
+        traceback.print_exc()
         logger.warning(f"Scoring failed for '{article.get('title')}': {e}")
         return None
 
@@ -51,7 +53,6 @@ def run_pipeline(keyword: str, num_articles: int = 10) -> list[dict]:
     with ThreadPoolExecutor(max_workers=5) as executor:
         enriched = list(executor.map(_scrape_article, articles))
 
-    # Filter out articles with no usable content before scoring
     enriched = [a for a in enriched if len(a.get("content", "")) > 50]
     logger.info(f"Scraping complete. {len(enriched)}/{len(articles)} articles have content.")
 
@@ -59,12 +60,8 @@ def run_pipeline(keyword: str, num_articles: int = 10) -> list[dict]:
     scored = []
     failed = 0
 
-    with ThreadPoolExecutor(max_workers=3) as executor:  # lower than scraping — LLM has rate limits
-        futures = {}
-        for i, article in enumerate(enriched):
-            future = executor.submit(_score_article_safe, article)
-            futures[future] = article
-            time.sleep(SCORER_RATE_LIMIT_DELAY)  # stagger API calls
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        futures = {executor.submit(_score_article_safe, article): article for article in enriched}
 
         for future in as_completed(futures):
             result = future.result()
@@ -72,10 +69,11 @@ def run_pipeline(keyword: str, num_articles: int = 10) -> list[dict]:
                 scored.append(result)
             else:
                 failed += 1
+                logger.warning(f"No result for: {futures[future].get('title')}")
 
     logger.info(f"Scoring complete. {len(scored)} scored, {failed} failed.")
 
-    # Step 4: Sort — credible articles first, misinformation last
+    # Step 4: Sort — highest scoring articles first
     scored.sort(key=lambda x: x.get("overall_score", 0), reverse=True)
 
     return scored
