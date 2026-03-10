@@ -1,6 +1,7 @@
 import asyncio
 import json
 import sys
+import argparse
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,25 +19,31 @@ app.add_middleware(
 
 
 @app.get("/analyze/{keyword}")
-async def analyze(keyword: str, num_articles: int = Query(default=10, ge=1, le=50)):
+async def analyze(
+    keyword: str,
+    num_articles: int = Query(default=10, ge=1, le=50),
+    category: str = Query(default=None, enum=["business", "entertainment", "general", "health", "science", "sports", "technology"])
+):
     try:
-        results = await asyncio.to_thread(run_pipeline, keyword, num_articles)
+        results = await asyncio.to_thread(run_pipeline, keyword, num_articles, category)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {"keyword": keyword, "articles": results}
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        keyword = " ".join(sys.argv[1:])
-    else:
-        keyword = input("Enter keyword to analyze: ").strip()
+    parser = argparse.ArgumentParser(description="Misinformation analyzer")
+    parser.add_argument("keyword", nargs="*", help="Keyword to analyze")
+    parser.add_argument("--category", choices=["business", "entertainment", "general", "health", "science", "sports", "technology"], default=None)
+    parser.add_argument("--num-articles", type=int, default=5)
+    args = parser.parse_args()
 
-    num_articles = 5
+    keyword = " ".join(args.keyword) if args.keyword else input("Enter keyword to analyze: ").strip()
+    num_articles = args.num_articles
 
     print(f"\nAnalyzing '{keyword}' — fetching {num_articles} articles...\n")
 
-    results = run_pipeline(keyword, num_articles)
+    results = run_pipeline(keyword, num_articles, args.category)
 
     for i, article in enumerate(results, 1):
         print(f"{'='*60}")

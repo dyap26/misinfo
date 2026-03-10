@@ -35,7 +35,7 @@ def _score_article_safe(article: dict) -> Optional[dict]:
         return None
 
 
-def run_pipeline(keyword: str, num_articles: int = 10) -> list[dict]:
+def run_pipeline(keyword: str, num_articles: int = 10, category: str = None) -> list[dict]:
     """
     Full pipeline: fetch → scrape → score → rank.
     - Scraping is parallelized (I/O bound)
@@ -44,7 +44,7 @@ def run_pipeline(keyword: str, num_articles: int = 10) -> list[dict]:
     logger.info(f"Starting pipeline for keyword: '{keyword}'")
 
     # Step 1: Fetch
-    articles = fetch_articles(keyword, num_articles)
+    articles = fetch_articles(keyword, num_articles, category)
     if not articles:
         logger.warning("No articles returned from fetch.")
         return []
