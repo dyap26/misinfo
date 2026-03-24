@@ -7,7 +7,7 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 
 **AI and Content Processing**
 * **Anthropic SDK (v0.84.0)** - Claude API Integration <br>
-[NewsAPI](https://newsapi.org/)
+* [NewsAPI](https://newsapi.org/)
 
 ## Architecture
 ### **Agent Implementation**
@@ -22,7 +22,7 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 * Max Tokens Per Article: 800
 
 ## Scoring
-Articles are scored based off 7 factors and their respective weighting:
+Articles are scored based off 7 factors and their respective weighting: <br>
 1.  
 2. 
 3. 
@@ -42,18 +42,11 @@ backend/
 ├── scorer.py                  # AI scorer
 ├── scraper.py                 # Article scraper
 frontend/
-├── app/
-│   ├── HomeScreen.tsx
-│   └── ResultsScreen.tsx       
+├── app/    
 ├── components/
-│   ├── ArticleCard.tsx
-│   ├── ClassificationBadge.tsx
-│   ├── LoadingScreen.tsx
-│   └── ScoreRing.tsx
 ├── constants/                 
 ├── hooks/
-└── types/
-│   └── index.ts               # TypeScript type definitions
+└── types/                     # TypeScript type definitions
 │
 ```
 
