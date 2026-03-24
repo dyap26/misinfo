@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 
 # Point to project root instead
-load_dotenv(Path(__file__).resolve().parent.parent / ".env.local")
+load_dotenv(Path(__file__).resolve().parent/ ".env.local")
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 

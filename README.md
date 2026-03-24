@@ -13,7 +13,7 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 ### **Agent Implementation**
 **Processing Flow:**
 1. Content Fetching - Fetches multiple articles based on the inputted keyword(s).
-2. Content Extraction - Scrape
+2. Content Extraction - Scrape text from each article.
 3. AI Analysis - Sends the extracted data to Claude for structured analysis and scoring.
 4. Ranking 
 
@@ -41,18 +41,20 @@ backend/
 ├── pipeline.py                # Main pipeline
 ├── scorer.py                  # AI scorer
 ├── scraper.py                 # Article scraper
-src/
+frontend/
 ├── app/
-│   ├── api/
-│   │   └── process-article/
-│   │       └── route.ts       # AI agent API endpoint
-│   ├── layout.tsx             # Root layout with PostHog provider
-│   ├── page.tsx               # Main UI (SmartStorySuite component)
-│   └── globals.css            # Tailwind config and theme variables
+│   ├── HomeScreen.tsx
+│   └── ResultsScreen.tsx       
 ├── components/
-│   └── PostHogProvider.tsx    # Analytics context wrapper
-└── lib/
-    └── posthog.ts             # PostHog client initialization
+│   ├── ArticleCard.tsx
+│   ├── ClassificationBadge.tsx
+│   ├── LoadingScreen.tsx
+│   └── ScoreRing.tsx
+├── constants/                 
+├── hooks/
+└── types/
+│   └── index.ts               # TypeScript type definitions
+│
 ```
 
 ## Getting Started
@@ -62,11 +64,13 @@ npm install
 pip install -r requirements.txt
 ```
 2. Fill Environment Variables <br>
-Create a ```bash .env.local``` file with the following variables:
+There are two .env.local files needed.
+Create a ```bash .env.local``` file in the backend folder with the following variables:
 ```bash
 NEWS_API_KEY = your_news_api_key
 ANTHROPIC_API_KEY = your_anthropic_api_key
 ```
+Create a ```bash .env.local``` file in the frontend folder with the following variables:
 3. Test the Backend <br>
 There are three different ways to test the backend from the terminal:
 * Singular keyword
@@ -76,6 +80,18 @@ python3 main.py your_keyword
 * Multiple keywords
 ``` bash
 python3 main.py keyword_1 keyword_2 keyword_3
+```
+4. Start App <br>
+To test locally, you will need two terminal tabs open
+* Backend
+``` bash
+cd backend
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+* Frontend
+``` bash
+cd frontend
+npx expo start
 ```
 
 ## Acknowledgements
