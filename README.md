@@ -4,15 +4,17 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 
 ## Tech Stack
 
-**Framework and Runtime**
-* Python 
-
-**AI and Content Processing**
-* **Anthropic SDK (v0.84.0)** - Claude API Integration <br>
-* [NewsAPI](https://newsapi.org/)
+**Backend**
+- Python — core runtime
+- FastAPI + Uvicorn — REST API server
+- Anthropic SDK — Claude API integration for credibility scoring
+- NewsAPI — article discovery and fetching
+- newspaper3k + httpx — article scraping and text extraction
 
 **Frontend**
-* Expo 
+- React Native (Expo SDK 54) — mobile application
+- React Navigation — screen routing
+- react-native-svg — score visualizations
 
 ## Architecture
 
