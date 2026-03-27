@@ -106,7 +106,7 @@ export function HomeScreen({ navigation }: Props) {
           </TouchableOpacity>
         </View>
 
-        {/* Category picker */}
+        {/* Category Selection */}
         <View style={styles.fieldSection}>
           <Text style={styles.fieldLabel}>CATEGORY</Text>
           <ScrollView
@@ -144,7 +144,7 @@ export function HomeScreen({ navigation }: Props) {
         <View style={styles.fieldSection}>
           <Text style={styles.fieldLabel}>ARTICLES TO FETCH</Text>
           <View style={styles.countRow}>
-            {[5, 8, 10, 15].map((n) => (
+            {[5, 10, 15].map((n) => (
               <TouchableOpacity
                 key={n}
                 style={[
