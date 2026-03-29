@@ -37,7 +37,31 @@ export function ResultsScreen({ navigation, route }: Props) {
       )
     : articles;
 
-  if (loading) return <LoadingScreen keyword={keyword} />;
+    if (loading) return <LoadingScreen keyword={keyword} />;
+
+    if (error) return (
+      <View style={styles.centeredPage}>
+        <Text style={styles.errorIcon}>⚠</Text>
+        <Text style={styles.errorTitle}>Something went wrong</Text>
+        <Text style={styles.errorMessage}>{error}</Text>
+        <TouchableOpacity style={styles.retryButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.retryText}>← Go back</Text>
+        </TouchableOpacity>
+      </View>
+    );
+    
+    if (!loading && articles.length === 0) return (
+      <View style={styles.centeredPage}>
+        <Text style={styles.errorIcon}>◎</Text>
+        <Text style={styles.errorTitle}>No articles found</Text>
+        <Text style={styles.errorMessage}>
+          Try a different keyword or category.
+        </Text>
+        <TouchableOpacity style={styles.retryButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.retryText}>← Go back</Text>
+        </TouchableOpacity>
+      </View>
+    );
 
   return (
     <View style={styles.root}>
@@ -194,5 +218,45 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: COLORS.danger,
     marginTop: 4,
+  },
+  centeredPage: {
+    flex: 1,
+    backgroundColor: COLORS.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 40,
+  },
+  errorIcon: {
+    fontSize: 32,
+    marginBottom: 16,
+    color: COLORS.textTertiary,
+  },
+  errorTitle: {
+    fontFamily: FONTS.serif,
+    fontSize: 22,
+    color: COLORS.text,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  errorMessage: {
+    fontFamily: FONTS.mono,
+    fontSize: 12,
+    color: COLORS.textSecondary,
+    textAlign: 'center',
+    lineHeight: 18,
+    marginBottom: 32,
+  },
+  retryButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 4,
+  },
+  retryText: {
+    fontFamily: FONTS.monoMedium,
+    fontSize: 12,
+    color: COLORS.text,
+    letterSpacing: 0.3,
   },
 });

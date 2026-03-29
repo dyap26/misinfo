@@ -24,6 +24,7 @@ export function useAnalyze(): UseAnalyzeReturn {
     category?: Category,
     numArticles: number = 8,
   ) => {
+    console.log('API_BASE_URL:', API_BASE_URL);
     setLoading(true);
     setError(null);
     setArticles([]);
