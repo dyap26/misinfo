@@ -88,15 +88,30 @@ frontend/
     EXPO_PUBLIC_API_BASE_URL = your_backend_url # e.g. http://192.168.x.x:8000
     ```
 5. Test the Backend <br>
-    There are three different ways to test the backend from the terminal:
-    * Singular keyword
-    ``` bash
-    python3 main.py your_keyword
-    ```
-    * Multiple keywords
-    ``` bash
-    python3 main.py keyword_1 keyword_2 keyword_3
-    ```
+    There are a couple different ways to test the backend from the terminal. First is by just using a keyword/phrase :
+    * Keyword/Keyphrase
+        ``` bash
+        python3 main.py your_keyword
+        ```
+    By default, the backend will attempt to query a maximum of 5 articles from the ```bash everything``` category. However, you can change these parameters with specific flags:
+    * Search within a certain category
+        ``` bash
+        python3 main.py your_keyword --category your_category
+        ```
+    * Change maximum number of articles fecthed
+        ``` bash
+        python3 main.py your_keyword --num-articles num_articles
+        ```
+
+    Categories include: <br>
+    * business
+    * entertainment
+    * general
+    * health
+    * science
+    * sports
+    * technology
+
 6. Start Development Server <br>
     To test locally, you will need two terminal tabs open
     * Backend
