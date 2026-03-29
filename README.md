@@ -113,17 +113,24 @@ frontend/
     * technology
 
 6. Start Development Server <br>
-    To test locally, you will need two terminal tabs open
+    To test the whole app locally, you will need two terminal tabs open
     * Backend
-    ``` bash
-    cd backend
-    uvicorn main:app --reload --host 0.0.0.0 --port 8000
-    ```
+        ``` bash
+        cd backend
+        uvicorn main:app --reload --host 0.0.0.0 --port 8000
+        ```
     * Frontend
-    ``` bash
-    cd frontend
-    npx expo start
-    ```
+        ``` bash
+        cd frontend
+        npx expo start
+        ```
+
+7. Run on device or simulator <br>
+    * Scan the QR code with your phone's camera (iOS) or the Expo Go app (Android)
+    * Press 'i' for iOS simulator
+    * Press 'a' for Android emulator
+    * Press 'w' for web browser
+
 ## Contributing
 
 Contributions are welcome. Feel free to submit a pull request.
