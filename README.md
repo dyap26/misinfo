@@ -87,7 +87,7 @@ frontend/
     ```bash
     EXPO_PUBLIC_API_BASE_URL = your_backend_url # e.g. http://192.168.x.x:8000
     ```
-3. Test the Backend <br>
+5. Test the Backend <br>
     There are three different ways to test the backend from the terminal:
     * Singular keyword
     ``` bash
@@ -97,7 +97,7 @@ frontend/
     ``` bash
     python3 main.py keyword_1 keyword_2 keyword_3
     ```
-5. Start Development Server <br>
+6. Start Development Server <br>
     To test locally, you will need two terminal tabs open
     * Backend
     ``` bash
