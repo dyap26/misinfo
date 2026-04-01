@@ -24,7 +24,7 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 1. Content Fetching - Fetches multiple articles based on the inputted keyword(s).
 2. Content Extraction - Scrape text from each article.
 3. AI Analysis - Sends the extracted data to Claude for structured analysis and scoring.
-4. Ranking 
+4. Ranking - Article scores are sorted from highest (credible) to lowest (least credible).
 
 **Model Configuration:**
 * Model: `claude-sonnet-4-6`
