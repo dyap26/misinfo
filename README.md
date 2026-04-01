@@ -5,16 +5,16 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
 ## Tech Stack
 
 **Backend**
-- Python — core runtime
-- FastAPI + Uvicorn — REST API server
-- Anthropic SDK — Claude API integration for credibility scoring
-- NewsAPI — article discovery and fetching
-- newspaper3k + httpx — article scraping and text extraction
+* Python — core runtime
+* FastAPI + Uvicorn — REST API server
+* Anthropic SDK — Claude API integration for credibility scoring
+* NewsAPI — article discovery and fetching
+* newspaper3k + httpx — article scraping and text extraction
 
 **Frontend**
-- React Native (Expo SDK 54) — mobile application
-- React Navigation — screen routing
-- react-native-svg — score visualizations
+* React Native (Expo SDK 54) — mobile application
+* React Navigation — screen routing
+* react-native-svg — score visualizations
 
 ## Architecture
 
@@ -149,9 +149,7 @@ frontend/
 If you plan to use the information the app gives you in any academic or journalistic setting, please read the article as well and make your own inferences. I am not liable for any false information given by the scorer.
 
 ## Contributing
-
 Contributions are always welcome! Feel free to submit a pull request.
 
 ## Acknowledgements
-
 Thank you to the Digital Engagement Lab at the University of Maryland for their support with this project. Check them out here: https://www.digitalengagementlab.org/
