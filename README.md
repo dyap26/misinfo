@@ -137,7 +137,7 @@ frontend/
 
 ## Contributing
 
-Contributions are welcome. Feel free to submit a pull request.
+Contributions are always welcome! Feel free to submit a pull request.
 
 ## Acknowledgements
 
