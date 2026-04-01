@@ -135,10 +135,18 @@ frontend/
     * Press 'a' for Android emulator
     * Press 'w' for web browser
 
-## Some Limitations
-* The scorer may not analyze and score an article correctly as the NewsAPI might fetch articles that are paywalled or have bot detection.
-* Claude may not have the most up-to-date information to cross-reference facts in articles.
-* Claude in general :(
+## Some Known Limitations
+* NewsAPI Specific:
+    * The scorer may not analyze and score an article correctly as the NewsAPI might fetch articles that are paywalled or have bot detection.
+    * On the free plan, NewsAPI can only request 100 articles per day and articles fetched must be at least 24 hours old.
+    * NewsAPI may fetch other articles that contain your keyword (if you were to use "oil" as your keyword, you may end up getting articles about "foil" or "soil").
+
+* Claude Specific:
+    * Claude may not have the most up-to-date information to cross-reference facts in articles.
+    * AI in general is not always the most trustworthy :( 
+    
+## A General Note
+If you plan to use the information the app gives you in any academic or journalistic setting, please read the article as well and make your own inferences. I am not liable for any false information given by the scorer.
 
 ## Contributing
 
