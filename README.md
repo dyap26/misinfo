@@ -141,4 +141,4 @@ Contributions are welcome. Feel free to submit a pull request.
 
 ## Acknowledgements
 
-I'll fill this out later
+Thank you to the Digital Engagement Lab at the University of Maryland for their support with this project. Check them out here: https://www.digitalengagementlab.org/
