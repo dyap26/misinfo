@@ -135,6 +135,11 @@ frontend/
     * Press 'a' for Android emulator
     * Press 'w' for web browser
 
+## Some Limitations
+* The scorer may not analyze and score an article correctly as the NewsAPI might fetch articles that are paywalled or have bot detection.
+* Claude may not have the most up-to-date information to cross-reference facts in articles.
+* Claude in general :(
+
 ## Contributing
 
 Contributions are always welcome! Feel free to submit a pull request.
