@@ -25,12 +25,12 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
     ```
 4. Fill Environment Variables <br>
     There are two .env.local files needed.
-    Create a ```bash .env.local``` file in the backend folder with the following variables:
+    Create a `.env.local` file in the backend folder with the following variables:
     ```bash
     NEWS_API_KEY = your_news_api_key
     ANTHROPIC_API_KEY = your_anthropic_api_key
     ```
-    Create a ```bash .env.local``` file in the frontend folder with the following variables:
+    Create a `.env.local` file in the frontend folder with the following variables:
     ```bash
     EXPO_PUBLIC_API_BASE_URL = your_backend_url # e.g. http://192.168.x.x:8000
     ```
@@ -40,7 +40,7 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
         ``` bash
         python3 main.py your_keyword
         ```
-    By default, the backend will attempt to query a maximum of 5 articles from the ```bash everything``` category. However, you can change these parameters with specific flags:
+    By default, the backend will attempt to query a maximum of 5 articles from the `everything` category. However, you can change these parameters with specific flags:
     * Search within a certain category
         ``` bash
         python3 main.py your_keyword --category your_category
