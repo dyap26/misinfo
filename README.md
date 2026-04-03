@@ -50,14 +50,14 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
         python3 main.py your_keyword --num-articles num_articles
         ```
 
-    Categories include: <br>
-    * business
-    * entertainment
-    * general
-    * health
-    * science
-    * sports
-    * technology
+    Categories that can be searched include: <br>
+    * `business`
+    * `entertainment`
+    * `general`
+    * `health`
+    * `science`
+    * `sports`
+    * `technology`
 
 6. Start Development Server <br>
     To test the whole app locally, you will need two terminal tabs open
