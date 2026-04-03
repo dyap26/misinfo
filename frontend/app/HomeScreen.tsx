@@ -23,7 +23,7 @@ type Props = {
 export function HomeScreen({ navigation }: Props) {
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState<Category | undefined>(undefined);
-  const [numArticles, setNumArticles] = useState(8);
+  const [numArticles, setNumArticles] = useState(5);
   const { analyze, loading, error } = useAnalyze();
   const inputRef = useRef<TextInput>(null);
   const underlineWidth = useRef(new Animated.Value(0)).current;
