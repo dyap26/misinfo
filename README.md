@@ -103,6 +103,7 @@ Articles are scored based off of 7 factors and their respective weighting: <br>
    7. Source Reputation:    (5%)
 
 ## Some Known Limitations
+This is not an exhaustive list of limitations. There are still some for you to find yourself :) <br>
 * NewsAPI Specific:
     * The scorer may not analyze and score an article correctly as the NewsAPI might fetch articles that are paywalled or have bot detection.
     * On the free plan, NewsAPI can only request 100 articles per day and articles fetched must be at least 24 hours old.
