@@ -35,17 +35,17 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
     EXPO_PUBLIC_API_BASE_URL = your_backend_url # e.g. http://192.168.x.x:8000
     ```
 5. Test the Backend <br>
-    There are a couple different ways to test the backend from the terminal. First is by just using a keyword/phrase:
-    * Keyword/Keyphrase
+    There are a couple different ways to test the backend from the terminal. The most simple is just by using a keyword/phrase:
+    * Keyword/Keyphrase:
         ``` bash
         python3 main.py your_keyword
         ```
     By default, the backend will attempt to query a maximum of 5 articles from the `everything` category. However, you can change these parameters with specific flags:
-    * Search within a certain category
+    * Search within a certain category:
         ``` bash
         python3 main.py your_keyword --category your_category
         ```
-    * Change maximum number of articles fecthed
+    * Change maximum number of articles fetched:
         ``` bash
         python3 main.py your_keyword --num-articles num_articles
         ```
@@ -60,13 +60,13 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
     * `technology`
 
 6. Start Development Server <br>
-    To test the whole app locally, you will need two terminal tabs open
-    * Backend
+    To test the whole app locally, you will need two terminal tabs open.
+    * Backend:
         ``` bash
         cd backend
         uvicorn main:app --reload --host 0.0.0.0 --port 8000
         ```
-    * Frontend
+    * Frontend:
         ``` bash
         cd frontend
         npx expo start
