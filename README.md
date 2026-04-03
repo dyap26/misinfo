@@ -35,7 +35,7 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
     EXPO_PUBLIC_API_BASE_URL = your_backend_url # e.g. http://192.168.x.x:8000
     ```
 5. Test the Backend <br>
-    There are a couple different ways to test the backend from the terminal. First is by just using a keyword/phrase :
+    There are a couple different ways to test the backend from the terminal. First is by just using a keyword/phrase:
     * Keyword/Keyphrase
         ``` bash
         python3 main.py your_keyword
