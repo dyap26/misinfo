@@ -17,20 +17,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Analyze a keyword/phrase
-@app.get("/analyze/{keyword}")
-async def analyze(
-    keyword: str,
-    num_articles: int = Query(default=10, ge=1, le=50),
-    category: str = Query(default=None, enum=["business", "entertainment", "general", "health", "science", "sports", "technology"])
-):
-    try:
-        results = await asyncio.to_thread(run_pipeline, keyword, num_articles, category)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    return {"keyword": keyword, "articles": results}
-
-
 # Analyze a URL
 @app.post("/analyze/url")
 async def analyze_url(payload: dict):
@@ -63,6 +49,20 @@ async def analyze_url(payload: dict):
 
 
 def _extract_domain(url: str) -> str:
+
+# Analyze a keyword/phrase
+@app.get("/analyze/{keyword}")
+async def analyze(
+    keyword: str,
+    num_articles: int = Query(default=10, ge=1, le=50),
+    category: str = Query(default=None, enum=["business", "entertainment", "general", "health", "science", "sports", "technology"])
+):
+    try:
+        results = await asyncio.to_thread(run_pipeline, keyword, num_articles, category)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    return {"keyword": keyword, "articles": results}
+
     from urllib.parse import urlparse
     try:
         return urlparse(url).netloc.replace("www.", "")
