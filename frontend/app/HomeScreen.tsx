@@ -24,8 +24,11 @@ export function HomeScreen({ navigation }: Props) {
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState<Category | undefined>(undefined);
   const [numArticles, setNumArticles] = useState(5);
-  const { analyze, loading, error } = useAnalyze();
+  const [activeTab, setActiveTab] = useState<'keyword' | 'url'>('keyword');
+  const [urlInput, setUrlInput] = useState("");
+  const { analyze, analyzeUrl, loading, error } = useAnalyze();
   const inputRef = useRef<TextInput>(null);
+  const urlRef = useRef<TextInput>(null);
   const underlineWidth = useRef(new Animated.Value(0)).current;
 
   const onFocus = () => {
@@ -45,11 +48,12 @@ export function HomeScreen({ navigation }: Props) {
 
   const handleSearch = async () => {
     if (!keyword.trim()) return;
-    navigation.navigate("Results", {
-      keyword: keyword.trim(),
-      category,
-      numArticles,
-    });
+    navigation.navigate('Results', { keyword: keyword.trim(), category, numArticles });
+  };
+  
+  const handleUrlSearch = async () => {
+    if (!urlInput.trim()) return;
+    navigation.navigate('Results', { url: urlInput.trim(), numArticles: 1 });
   };
 
   return (
@@ -67,10 +71,34 @@ export function HomeScreen({ navigation }: Props) {
           <Text style={styles.tagline}>News credibility analysis</Text>
         </View>
 
+        {/* Tab switcher */}
+        <View style={styles.tabRow}>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'keyword' && styles.tabActive]}
+            onPress={() => setActiveTab('keyword')}
+          >
+            <Text style={[styles.tabLabel, activeTab === 'keyword' && styles.tabLabelActive]}>
+              KEYWORD
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'url' && styles.tabActive]}
+            onPress={() => setActiveTab('url')}
+          >
+            <Text style={[styles.tabLabel, activeTab === 'url' && styles.tabLabelActive]}>
+              URL
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.hairline} />
+
         {/* Divider */}
         <View style={styles.hairline} />
 
         {/* Search input */}
+        {activeTab === 'keyword' ? (
+        <>
         <View style={styles.inputSection}>
           <Text style={styles.fieldLabel}>KEYWORD</Text>
           <TouchableOpacity
@@ -166,20 +194,46 @@ export function HomeScreen({ navigation }: Props) {
             ))}
           </View>
         </View>
-
+        </>
+        ) : (
+          <View style={styles.inputSection}>
+            <Text style={styles.fieldLabel}>ARTICLE URL</Text>
+            <TouchableOpacity onPress={() => urlRef.current?.focus()} activeOpacity={1}>
+              <TextInput
+                ref={urlRef}
+                style={styles.input}
+                value={urlInput}
+                onChangeText={setUrlInput}
+                placeholder="https://..."
+                placeholderTextColor={COLORS.textTertiary}
+                returnKeyType="go"
+                onSubmitEditing={handleUrlSearch}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="url"
+              />
+              <Animated.View style={[styles.inputUnderline, { width: underlineWidth.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }]} />
+              <View style={styles.inputUnderlineBase} />
+            </TouchableOpacity>
+          </View>
+        )}
         {error && <Text style={styles.error}>{error}</Text>}
 
         {/* Search button */}
         <TouchableOpacity
           style={[
             styles.searchButton,
-            !keyword.trim() && styles.searchButtonDisabled,
+            (activeTab === 'keyword' ? !keyword.trim() : !urlInput.trim()) && styles.searchButtonDisabled
           ]}
-          onPress={handleSearch}
-          disabled={!keyword.trim()}
+          onPress={activeTab === 'keyword' ? handleSearch : handleUrlSearch}
+          disabled={activeTab === 'keyword' ? !keyword.trim() : !urlInput.trim()}
           activeOpacity={0.85}
         >
-          <Text style={styles.searchButtonText}>Analyze →</Text>
+          <Text style={styles.searchButtonText}>
+            {activeTab === 'keyword' ? 'Analyze →' : 'Score article →'}
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -320,5 +374,30 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: COLORS.danger,
     marginBottom: 12,
+  },
+  tabRow: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    gap: 0,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  tabActive: {
+    borderBottomWidth: 2,
+    borderBottomColor: COLORS.text,
+  },
+  tabLabel: {
+    fontFamily: FONTS.monoMedium,
+    fontSize: 10,
+    letterSpacing: 1.5,
+    color: COLORS.textTertiary,
+  },
+  tabLabelActive: {
+    color: COLORS.text,
   },
 });

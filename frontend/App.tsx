@@ -26,7 +26,8 @@ import { COLORS } from './constants';
 export type RootStackParamList = {
   Home: undefined;
   Results: {
-    keyword: string;
+    keyword?: string;
+    url?: string;
     category?: Category;
     numArticles: number;
   };
