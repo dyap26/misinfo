@@ -1,5 +1,5 @@
 import httpx
-from newspaper import Article, Config
+from newspaper import Article
 import logging
 
 logger = logging.getLogger(__name__)
@@ -20,50 +20,37 @@ PAYWALL_SIGNALS = [
     "continue reading",
 ]
 
-SCRAPE_FAILURE_SIGNALS = [
-    "enable javascript",
-    "please verify you are a human",
-    "access denied",
-    "checking your browser",
-]
-
 def is_likely_paywalled(text: str) -> bool:
-    return any(signal in text.lower() for signal in PAYWALL_SIGNALS)
+    lowered = text.lower()
+    return any(signal in lowered for signal in PAYWALL_SIGNALS)
 
-def get_full_text(url: str, char_limit: int = 3000) -> tuple[str, str]:
+def get_full_text(url: str, char_limit: int = 3000) -> str:
     if not isinstance(url, str):
-        return "", "scrape_failed"
+        return ""
     if not url.startswith(("http://", "https://")):
-        return "", "scrape_failed"
+        return ""
 
     try:
-        # Fetch HTML ourselves
+        # Use httpx to fetch with a real browser User-Agent
         response = httpx.get(url, headers=HEADERS, timeout=10, follow_redirects=True)
         response.raise_for_status()
-        html = response.text
 
-        # Let newspaper parse the pre-fetched HTML
-        config = Config()
-        config.fetch_images = False
-        config.memoize_articles = False
-
-        article = Article(url, config=config)
-        article.set_html(html)
+        article = Article(url)
+        article.set_html(response.text)  # feed pre-fetched HTML
         article.parse()
 
         text = article.text.strip()
 
-        if any(sig in text.lower() for sig in SCRAPE_FAILURE_SIGNALS):
-            return article.meta_description or "", "scrape_failed"
-
         if len(text) < 100:
-            return article.meta_description or "", "scrape_failed"
+            logger.warning(f"Short content from {url} ({len(text)} chars) — likely blocked")
+            return article.meta_description or ""
 
         if is_likely_paywalled(text):
-            return article.meta_description or "", "paywall"
+            logger.warning(f"Paywall detected at {url}")
+            return article.meta_description or ""
 
-        return text[:char_limit], "ok"
+        return text[:char_limit]
 
     except Exception as e:
         logger.warning(f"Failed to scrape {url}: {e}")
-        return "", "scrape_failed"
+        return ""

@@ -90,9 +90,7 @@ export function HomeScreen({ navigation }: Props) {
             </Text>
           </TouchableOpacity>
         </View>
-
-        <View style={styles.hairline} />
-
+        
         {/* Divider */}
         <View style={styles.hairline} />
 

@@ -60,7 +60,7 @@ export function ResultsScreen({ navigation, route }: Props) {
       </View>
     );
     
-    if (!loading && articles.length === 0) return (
+    if (!loading && displayArticles.length === 0) return (
       <View style={styles.centeredPage}>
         <Text style={styles.errorIcon}>◎</Text>
         <Text style={styles.errorTitle}>No articles found</Text>
@@ -101,7 +101,7 @@ export function ResultsScreen({ navigation, route }: Props) {
         {error && <Text style={styles.error}>{error}</Text>}
         {!error && !loading && (
           <Text style={styles.queryMeta}>
-            {articles.length} article{articles.length !== 1 ? "s" : ""} analyzed
+            {displayArticles.length} article{displayArticles.length !== 1 ? "s" : ""} analyzed
             {category ? ` · ${category}` : ""}
           </Text>
         )}
