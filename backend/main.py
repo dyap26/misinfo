@@ -38,7 +38,8 @@ async def analyze_url(payload: dict):
         raise HTTPException(status_code=400, detail="URL is required")
 
     try:
-        content, status = get_full_text(url)
+        content = get_full_text(url)
+        status = "ok" if content else "scrape_failed"
 
         article = {
             "title": payload.get("title", "User-submitted article"),
