@@ -1,5 +1,5 @@
 import httpx
-from newspaper import Article
+from newspaper import Article, Config
 import logging
 
 logger = logging.getLogger(__name__)
@@ -28,8 +28,7 @@ SCRAPE_FAILURE_SIGNALS = [
 ]
 
 def is_likely_paywalled(text: str) -> bool:
-    lowered = text.lower()
-    return any(signal in lowered for signal in PAYWALL_SIGNALS)
+    return any(signal in text.lower() for signal in PAYWALL_SIGNALS)
 
 def get_full_text(url: str, char_limit: int = 3000) -> tuple[str, str]:
     if not isinstance(url, str):
@@ -38,12 +37,18 @@ def get_full_text(url: str, char_limit: int = 3000) -> tuple[str, str]:
         return "", "scrape_failed"
 
     try:
+        # Fetch HTML ourselves
         response = httpx.get(url, headers=HEADERS, timeout=10, follow_redirects=True)
         response.raise_for_status()
+        html = response.text
 
-        article = Article(url)
-        article.html = response.text
-        article.download_state = 2  # marks as downloaded
+        # Let newspaper parse the pre-fetched HTML
+        config = Config()
+        config.fetch_images = False
+        config.memoize_articles = False
+
+        article = Article(url, config=config)
+        article.set_html(html)
         article.parse()
 
         text = article.text.strip()
