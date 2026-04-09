@@ -35,7 +35,8 @@ def get_full_text(url: str, char_limit: int = 3000) -> tuple[str, str]:
         response.raise_for_status()
 
         article = Article(url)
-        article.download(input_html=response.text)  # ← replaces set_html
+        article.html = response.text
+        article.download_state = 2  # marks as downloaded
         article.parse()
 
         text = article.text.strip()
