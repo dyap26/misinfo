@@ -20,6 +20,13 @@ PAYWALL_SIGNALS = [
     "continue reading",
 ]
 
+SCRAPE_FAILURE_SIGNALS = [
+    "enable javascript",
+    "please verify you are a human",
+    "access denied",
+    "checking your browser",
+]
+
 def is_likely_paywalled(text: str) -> bool:
     lowered = text.lower()
     return any(signal in lowered for signal in PAYWALL_SIGNALS)
