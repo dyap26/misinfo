@@ -2,10 +2,12 @@ import asyncio
 import json
 import sys
 import argparse
+from urllib.parse import urlparse
+
 from scraper import get_full_text
+from scorer import score_article
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-
 from pipeline import run_pipeline
 
 app = FastAPI()
@@ -17,17 +19,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Analyze a URL
+
+def _extract_domain(url: str) -> str:
+    try:
+        return urlparse(url).netloc.replace("www.", "")
+    except Exception:
+        return "Unknown"
+
+
 @app.post("/analyze/url")
 async def analyze_url(payload: dict):
     url = payload.get("url", "").strip()
     if not url:
         raise HTTPException(status_code=400, detail="URL is required")
-    
+
     try:
         content, status = get_full_text(url)
-        
-        # Extract metadata from URL if scrape succeeded
+
         article = {
             "title": payload.get("title", "User-submitted article"),
             "source": _extract_domain(url),
@@ -48,9 +56,6 @@ async def analyze_url(payload: dict):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-def _extract_domain(url: str) -> str:
-
-# Analyze a keyword/phrase
 @app.get("/analyze/{keyword}")
 async def analyze(
     keyword: str,
@@ -62,12 +67,6 @@ async def analyze(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {"keyword": keyword, "articles": results}
-
-    from urllib.parse import urlparse
-    try:
-        return urlparse(url).netloc.replace("www.", "")
-    except Exception:
-        return "Unknown"
 
 
 if __name__ == "__main__":
@@ -99,8 +98,3 @@ if __name__ == "__main__":
 
     print(f"\n{'='*60}")
     print(f"Done. {len(results)} articles analyzed.")
-
-    # Optionally dump full JSON to a file for inspection
-    #with open("test_output.json", "w") as f:
-    #    json.dump({"keyword": keyword, "articles": results}, f, indent=2)
-    #print("Full output saved to test_output.json")
