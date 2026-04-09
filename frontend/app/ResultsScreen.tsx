@@ -41,10 +41,6 @@ export function ResultsScreen({ navigation, route }: Props) {
   // After loading check, handle single result
   const displayArticles = singleResult ? [singleResult] : articles;
 
-  useEffect(() => {
-    analyze(keyword, category, numArticles);
-  }, []);
-
   const filtered = searchText.trim()
     ? displayArticles.filter(
         (a) =>
@@ -52,8 +48,6 @@ export function ResultsScreen({ navigation, route }: Props) {
           a.source?.toLowerCase().includes(searchText.toLowerCase())
       )
     : displayArticles;
-
-    if (loading) return <LoadingScreen keyword={keyword} />;
 
     if (error) return (
       <View style={styles.centeredPage}>

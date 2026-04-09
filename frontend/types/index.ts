@@ -31,3 +31,14 @@ export interface Article {
   scores: ArticleScores;
   scrape_status?: 'ok' | 'paywall' | 'scrape_failed';
 }
+
+// Check if I need to add this in.
+export type RootStackParamList = {
+  Home: undefined;
+  Results: {
+    keyword?: string;
+    url?: string;
+    category?: Category;
+    numArticles: number;
+  };
+};
