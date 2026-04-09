@@ -2,7 +2,7 @@ import asyncio
 import json
 import sys
 import argparse
-
+from scraper import get_full_text
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -17,7 +17,40 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Analyze a URL
+@app.post("/analyze/url")
+async def analyze_url(payload: dict):
+    url = payload.get("url", "").strip()
+    if not url:
+        raise HTTPException(status_code=400, detail="URL is required")
+    
+    try:
+        content, status = get_full_text(url)
+        
+        # Extract metadata from URL if scrape succeeded
+        article = {
+            "title": payload.get("title", "User-submitted article"),
+            "source": _extract_domain(url),
+            "url": url,
+            "content": content or "",
+            "scrape_status": status,
+        }
 
+        if not content:
+            raise HTTPException(status_code=422, detail="Could not extract content from URL")
+
+        result = score_article(article)
+        return result
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def _extract_domain(url: str) -> str:
+
+# Analyze a keyword/phrase
 @app.get("/analyze/{keyword}")
 async def analyze(
     keyword: str,
@@ -29,6 +62,12 @@ async def analyze(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return {"keyword": keyword, "articles": results}
+
+    from urllib.parse import urlparse
+    try:
+        return urlparse(url).netloc.replace("www.", "")
+    except Exception:
+        return "Unknown"
 
 
 if __name__ == "__main__":

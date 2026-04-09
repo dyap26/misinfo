@@ -21,23 +21,33 @@ type Props = {
 };
 
 export function ResultsScreen({ navigation, route }: Props) {
-  const { keyword, category, numArticles } = route.params;
-  const { articles, loading, error, analyze } = useAnalyze();
   const [searchText, setSearchText] = useState("");
+  const { keyword, url, category, numArticles } = route.params;
+  const { articles, singleResult, loading, error, analyze, analyzeUrl } = useAnalyze();
 
   useEffect(() => {
-    analyze(keyword, category, numArticles);
+    if (url) {
+      analyzeUrl(url);
+    } else if (keyword) {
+      analyze(keyword, category, numArticles);
+    }
   }, []);
 
+  // Update loading screen
+  if (loading) return (
+    <LoadingScreen keyword={url ? 'article' : keyword ?? ''} />
+  );
+
+  // After loading check, handle single result
+  const displayArticles = singleResult ? [singleResult] : articles;
+
   const filtered = searchText.trim()
-    ? articles.filter(
+    ? displayArticles.filter(
         (a) =>
           a.title?.toLowerCase().includes(searchText.toLowerCase()) ||
-          a.source?.toLowerCase().includes(searchText.toLowerCase()),
+          a.source?.toLowerCase().includes(searchText.toLowerCase())
       )
-    : articles;
-
-    if (loading) return <LoadingScreen keyword={keyword} />;
+    : displayArticles;
 
     if (error) return (
       <View style={styles.centeredPage}>
@@ -85,7 +95,9 @@ export function ResultsScreen({ navigation, route }: Props) {
       {/* Query summary */}
       <View style={styles.querySummary}>
         <Text style={styles.queryLabel}>RESULTS FOR</Text>
-        <Text style={styles.queryKeyword}>"{keyword}"</Text>
+        <Text style={styles.queryKeyword}>
+          {url ? new URL(url).hostname.replace('www.', '') : `"${keyword}"`}
+        </Text>
         {error && <Text style={styles.error}>{error}</Text>}
         {!error && !loading && (
           <Text style={styles.queryMeta}>

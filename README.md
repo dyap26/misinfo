@@ -2,6 +2,10 @@
 
 A mobile app dedicated to reviewing news articles for misinformation using Claude AI. Built with Expo, TypeScript, and Python.
 
+## App Functionality
+* Search for multiple news articles and their misinformation scores using a keyword/keyphrase.
+* Score an article for misinformation by entering their link.
+
 ## Getting Started
 
 1. Install Node.js and npm
