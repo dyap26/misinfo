@@ -99,37 +99,41 @@ export function HomeScreen({ navigation }: Props) {
         <>
         <View style={styles.inputSection}>
           <Text style={styles.fieldLabel}>KEYWORD</Text>
-          <TouchableOpacity
-            onPress={() => inputRef.current?.focus()}
-            activeOpacity={1}
-          >
-            <TextInput
-              ref={inputRef}
-              style={styles.input}
-              value={keyword}
-              onChangeText={setKeyword}
-              placeholder="e.g. climate change, AI regulation..."
-              placeholderTextColor={COLORS.textTertiary}
-              returnKeyType="search"
-              onSubmitEditing={handleSearch}
-              onFocus={onFocus}
-              onBlur={onBlur}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-            <Animated.View
-              style={[
-                styles.inputUnderline,
-                {
-                  width: underlineWidth.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ["0%", "100%"],
-                  }),
-                },
-              ]}
-            />
-            <View style={styles.inputUnderlineBase} />
-          </TouchableOpacity>
+            <TouchableOpacity onPress={() => inputRef.current?.focus()} activeOpacity={1}>
+              <View style={styles.inputRow}>
+                <TextInput
+                  ref={inputRef}
+                  style={[styles.input, { flex: 1 }]}
+                  value={keyword}
+                  onChangeText={setKeyword}
+                  placeholder="e.g. climate change, AI regulation..."
+                  placeholderTextColor={COLORS.textTertiary}
+                  returnKeyType="search"
+                  onSubmitEditing={handleSearch}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+                {keyword.length > 0 && (
+                  <TouchableOpacity onPress={() => setKeyword("")} style={styles.clearButton}>
+                    <Text style={styles.clearButtonText}>✕</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+              <Animated.View
+                style={[
+                  styles.inputUnderline,
+                  {
+                    width: underlineWidth.interpolate({
+                      inputRange: [0, 1],
+                      outputRange: ["0%", "100%"],
+                    }),
+                  },
+                ]}
+              />
+              <View style={styles.inputUnderlineBase} />
+            </TouchableOpacity>
         </View>
 
         {/* Category Selection */}
@@ -196,25 +200,28 @@ export function HomeScreen({ navigation }: Props) {
         ) : (
           <View style={styles.inputSection}>
             <Text style={styles.fieldLabel}>ARTICLE URL</Text>
-            <TouchableOpacity onPress={() => urlRef.current?.focus()} activeOpacity={1}>
-              <TextInput
-                ref={urlRef}
-                style={styles.input}
-                value={urlInput}
-                onChangeText={setUrlInput}
-                placeholder="https://..."
-                placeholderTextColor={COLORS.textTertiary}
-                returnKeyType="go"
-                onSubmitEditing={handleUrlSearch}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="url"
-              />
-              <Animated.View style={[styles.inputUnderline, { width: underlineWidth.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }]} />
-              <View style={styles.inputUnderlineBase} />
-            </TouchableOpacity>
+            <View style={styles.inputRow}>
+            <TextInput
+              ref={urlRef}
+              style={[styles.input, { flex: 1 }]}
+              value={urlInput}
+              onChangeText={setUrlInput}
+              placeholder="https://..."
+              placeholderTextColor={COLORS.textTertiary}
+              returnKeyType="go"
+              onSubmitEditing={handleUrlSearch}
+              onFocus={onFocus}
+              onBlur={onBlur}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="url"
+            />
+            {urlInput.length > 0 && (
+              <TouchableOpacity onPress={() => setUrlInput("")} style={styles.clearButton}>
+                <Text style={styles.clearButtonText}>✕</Text>
+              </TouchableOpacity>
+            )}
+          </View>
           </View>
         )}
         {error && <Text style={styles.error}>{error}</Text>}
@@ -397,5 +404,18 @@ const styles = StyleSheet.create({
   },
   tabLabelActive: {
     color: COLORS.text,
+  },
+  inputRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  clearButton: {
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+  },
+  clearButtonText: {
+    fontFamily: FONTS.mono,
+    fontSize: 12,
+    color: COLORS.textTertiary,
   },
 });
