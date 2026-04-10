@@ -8,7 +8,7 @@ import sys
 import argparse
 from urllib.parse import urlparse
 
-from scraper import get_full_text
+from scraper import get_full_text, get_article_title
 from scorer import score_article
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -42,7 +42,7 @@ async def analyze_url(payload: dict):
         status = "ok" if content else "scrape_failed"
 
         article = {
-            "title": payload.get("title", "User-submitted article"),
+            "title": get_article_title(url) or payload.get("title", "User-submitted article"),
             "source": _extract_domain(url),
             "url": url,
             "content": content or "",
@@ -77,18 +77,12 @@ async def analyze(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Misinformation analyzer")
     parser.add_argument("keyword", nargs="*", help="Keyword to analyze")
+    parser.add_argument("--url", type=str, default=None, help="Analyze a single article by URL")
     parser.add_argument("--category", choices=["business", "entertainment", "general", "health", "science", "sports", "technology"], default=None)
     parser.add_argument("--num-articles", type=int, default=5)
     args = parser.parse_args()
 
-    keyword = " ".join(args.keyword) if args.keyword else input("Enter keyword to analyze: ").strip()
-    num_articles = args.num_articles
-
-    print(f"\nAnalyzing '{keyword}' — fetching {num_articles} articles...\n")
-
-    results = run_pipeline(keyword, num_articles, args.category)
-
-    for i, article in enumerate(results, 1):
+    def print_article(article: dict, i: int = 1):
         print(f"{'='*60}")
         print(f"[{i}] {article.get('title', 'No title')}")
         print(f"    Source         : {article.get('source', 'Unknown')}")
@@ -101,5 +95,29 @@ if __name__ == "__main__":
             print(f"    ✓ Strengths   : {', '.join(article['strengths'])}")
         print(f"    URL            : {article.get('url', 'N/A')}")
 
-    print(f"\n{'='*60}")
-    print(f"Done. {len(results)} articles analyzed.")
+    if args.url:
+        print(f"\nAnalyzing URL: {args.url}\n")
+        content = get_full_text(args.url)
+        if not content:
+            print("Could not extract content from URL.")
+        else:
+            article = {
+                "title": get_article_title(args.url) or "User-submitted article",
+                "source": _extract_domain(args.url),
+                "url": args.url,
+                "content": content,
+            }
+            result = score_article(article)
+            print_article(result)
+    else:
+        keyword = " ".join(args.keyword) if args.keyword else input("Enter keyword to analyze: ").strip()
+        num_articles = args.num_articles
+
+        print(f"\nAnalyzing '{keyword}' — fetching {num_articles} articles...\n")
+        results = run_pipeline(keyword, num_articles, args.category)
+
+        for i, article in enumerate(results, 1):
+            print_article(article, i)
+
+        print(f"\n{'='*60}")
+        print(f"Done. {len(results)} articles analyzed.")

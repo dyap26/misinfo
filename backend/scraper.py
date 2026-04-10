@@ -1,5 +1,5 @@
 import httpx
-from newspaper import Article
+from bs4 import BeautifulSoup
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,8 +21,39 @@ PAYWALL_SIGNALS = [
 ]
 
 def is_likely_paywalled(text: str) -> bool:
-    lowered = text.lower()
-    return any(signal in lowered for signal in PAYWALL_SIGNALS)
+    return any(signal in text.lower() for signal in PAYWALL_SIGNALS)
+
+def _extract_meta(soup: BeautifulSoup) -> str:
+    tag = (
+        soup.find("meta", attrs={"name": "description"})
+        or soup.find("meta", attrs={"property": "og:description"})
+    )
+    return tag.get("content", "").strip() if tag else ""
+
+def _extract_text(soup: BeautifulSoup) -> str:
+    for tag in soup(["script", "style", "nav", "header", "footer", "aside", "form", "iframe"]):
+        tag.decompose()
+
+    container = (
+        soup.find("article")
+        or soup.find("main")
+        or soup.find(attrs={"role": "main"})
+        or soup.find("body")
+    )
+
+    if not container:
+        return ""
+
+    paragraphs = container.find_all("p")
+    return " ".join(p.get_text(separator=" ", strip=True) for p in paragraphs).strip()
+
+def get_article_title(url: str) -> str:
+    try:
+        response = httpx.get(url, headers=HEADERS, timeout=10, follow_redirects=True)
+        soup = BeautifulSoup(response.text, "lxml")
+        return _extract_title(soup)
+    except Exception:
+        return ""
 
 def get_full_text(url: str, char_limit: int = 3000) -> str:
     if not isinstance(url, str):
@@ -31,23 +62,20 @@ def get_full_text(url: str, char_limit: int = 3000) -> str:
         return ""
 
     try:
-        # Use httpx to fetch with a real browser User-Agent
         response = httpx.get(url, headers=HEADERS, timeout=10, follow_redirects=True)
         response.raise_for_status()
 
-        article = Article(url)
-        article.set_html(response.text)  # feed pre-fetched HTML
-        article.parse()
-
-        text = article.text.strip()
+        soup = BeautifulSoup(response.text, "lxml")
+        text = _extract_text(soup)
+        meta = _extract_meta(soup)
 
         if len(text) < 100:
             logger.warning(f"Short content from {url} ({len(text)} chars) — likely blocked")
-            return article.meta_description or ""
+            return meta
 
         if is_likely_paywalled(text):
             logger.warning(f"Paywall detected at {url}")
-            return article.meta_description or ""
+            return meta
 
         return text[:char_limit]
 
