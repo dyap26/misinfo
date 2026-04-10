@@ -49,8 +49,12 @@ async def analyze_url(payload: dict):
             "scrape_status": status,
         }
 
+        # Content unable to be scraped...
         if not content:
-            raise HTTPException(status_code=422, detail="Could not extract content from URL")
+            raise HTTPException(
+                status_code=422, 
+                detail="This site blocked content extraction. Try a different URL."
+            )
 
         result = score_article(article)
         return result

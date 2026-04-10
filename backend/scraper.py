@@ -70,6 +70,12 @@ def get_full_text(url: str, char_limit: int = 3000) -> str:
 
     try:
         response = httpx.get(url, headers=HEADERS, timeout=10, follow_redirects=True)
+
+        # Handles blocked
+        if response.status_code == 403:
+            logger.warning(f"403 Forbidden for {url}")
+            return "", "blocked"
+
         response.raise_for_status()
 
         soup = BeautifulSoup(response.text, "lxml")
