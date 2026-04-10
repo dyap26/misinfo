@@ -11,6 +11,7 @@ load_dotenv(Path(__file__).resolve().parent / ".env.local")
 logger = logging.getLogger(__name__)
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
+# The main scoring prompt that is sent to Claude.
 SCORING_PROMPT = """
 You are a media literacy and fact-checking expert with deep knowledge of journalistic standards.
 
@@ -160,7 +161,7 @@ def score_article(article: dict) -> dict:
     try:
         response = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=2048,
+            max_tokens=2048,                                                                            # change this if you want to modify the token usage
             messages=[{"role": "user", "content": prompt}]
         )
         if response.stop_reason == "max_tokens":

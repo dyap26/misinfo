@@ -98,7 +98,7 @@ A mobile/web app dedicated to reviewing news articles for misinformation using C
 
 **Model Configuration:**
    * Model: `claude-sonnet-4-6`
-   * Max Tokens Per Article: 800
+   * Max Tokens Per Article: 2048
 
 ## Scoring
 

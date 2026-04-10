@@ -3,11 +3,11 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 
-# Point to project root instead
 load_dotenv(Path(__file__).resolve().parent/ ".env.local")
 
 NEWS_API_KEY = os.getenv("NEWS_API_KEY")
 
+# Fetch the articles corresponding to the keyword.
 def fetch_articles(keyword: str, num_articles: int = 10, category: str = None):
     if not NEWS_API_KEY:
         raise ValueError("NEWS_API_KEY not found — check your .env.local file")

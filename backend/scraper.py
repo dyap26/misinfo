@@ -51,6 +51,7 @@ def _extract_text(soup: BeautifulSoup) -> str:
     paragraphs = container.find_all("p")
     return " ".join(p.get_text(separator=" ", strip=True) for p in paragraphs).strip()
 
+# Gets the article title for user-entered URL functions
 def get_article_title(url: str) -> str:
     try:
         response = httpx.get(url, headers=HEADERS, timeout=10, follow_redirects=True)
@@ -66,6 +67,7 @@ def get_article_title(url: str) -> str:
     except Exception:
         return ""
 
+# SCRAPE THE TEXT. ALL OF IT (well not all of it if the article is paywalled).
 def get_full_text(url: str, char_limit: int = 3000) -> str:
     if not isinstance(url, str):
         return ""

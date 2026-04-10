@@ -23,14 +23,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
+# Grab that domain (cnn, foxnews, etc.)
 def _extract_domain(url: str) -> str:
     try:
         return urlparse(url).netloc.replace("www.", "")
     except Exception:
         return "Unknown"
 
-
+# User inputs an article url, gets the score back along with the details.
 @app.post("/analyze/url")
 async def analyze_url(payload: dict):
     url = payload.get("url", "").strip()
@@ -64,7 +64,7 @@ async def analyze_url(payload: dict):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
+# Fetch articles and analyze by using a keyword/keyphrase
 @app.get("/analyze/{keyword}")
 async def analyze(
     keyword: str,
@@ -77,7 +77,7 @@ async def analyze(
         raise HTTPException(status_code=500, detail=str(e))
     return {"keyword": keyword, "articles": results}
 
-
+# Command line interface, useful for testing prompts and modifications before pushing!
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Misinformation analyzer")
     parser.add_argument("keyword", nargs="*", help="Keyword to analyze")
