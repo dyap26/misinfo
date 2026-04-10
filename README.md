@@ -53,6 +53,11 @@ A mobile app dedicated to reviewing news articles for misinformation using Claud
         ``` bash
         python3 main.py your_keyword --num-articles num_articles
         ```
+    Finally, you can score articles by giving a url:
+    * Search by url:
+        ``` bash
+        python3 main.py --url your_url
+        ```
 
     Categories that can be searched include: <br>
     * `business`
@@ -112,7 +117,11 @@ This is not an exhaustive list of limitations. There are still some for you to f
     * The scorer may not analyze and score an article correctly as the NewsAPI might fetch articles that are paywalled or have bot detection.
     * On the free plan, NewsAPI can only request 100 articles per day and articles fetched must be at least 24 hours old.
     * NewsAPI may fetch other articles that contain your keyword. For example: if you were to use "oil" as your keyword, you may end up getting articles about "foil" or "soil".
-
+* Scraper Specific:
+    * Some articles cannot be scraped dependent on where they come from. Sites that cannot be scraped include:
+        * The New York Times
+        * Wall Street Journal
+        * Most academic journals
 * Claude Specific:
     * Claude may not have the most up-to-date information to cross-reference facts in articles.
     * AI in general is not always the most trustworthy :( 

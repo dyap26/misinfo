@@ -12,6 +12,10 @@ HEADERS = {
     )
 }
 
+FALLBACK_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+}
+
 PAYWALL_SIGNALS = [
     "subscribe to read",
     "create a free account",
@@ -73,8 +77,7 @@ def get_full_text(url: str, char_limit: int = 3000) -> str:
 
         # Handles blocked
         if response.status_code == 403:
-            logger.warning(f"403 Forbidden for {url}")
-            return "", "blocked"
+            response = httpx.get(url, headers=FALLBACK_HEADERS, timeout=10, follow_redirects=True)
 
         response.raise_for_status()
 
