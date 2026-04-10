@@ -75,9 +75,10 @@ def get_full_text(url: str, char_limit: int = 3000) -> str:
     try:
         response = httpx.get(url, headers=HEADERS, timeout=10, follow_redirects=True)
 
-        # Handles blocked
+        # Handles blocked sites (NYT, WSJ, etc.)
         if response.status_code == 403:
-            response = httpx.get(url, headers=FALLBACK_HEADERS, timeout=10, follow_redirects=True)
+            logger.warning(f"403 Forbidden for {url}")
+            return "", "blocked"
 
         response.raise_for_status()
 
