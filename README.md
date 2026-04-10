@@ -1,6 +1,6 @@
 # Misinformation App
 
-A mobile app dedicated to reviewing news articles for misinformation using Claude AI. Built with Expo, TypeScript, and Python.
+A mobile/web app dedicated to reviewing news articles for misinformation using Claude AI. Built with Expo, TypeScript, and Python. Deployed using Vercel at https://misinfo-green.vercel.app/.
 
 ## App Functionality
 * Search for multiple news articles and their misinformation scores using a keyword/keyphrase.
