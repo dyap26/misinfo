@@ -49,8 +49,7 @@ export function ScoreRing({ score, size = 52 }: ScoreRingProps) {
           strokeDasharray={`${circumference}`}
           strokeDashoffset={circumference - progress}
           strokeLinecap="round"
-          rotation="-90"
-          origin={`${size / 2}, ${size / 2}`}
+          transform={`rotate(-90, ${size / 2}, ${size / 2})`}
         />
       </Svg>
       <Text style={[styles.score, { color }]}>{score.toFixed(1)}</Text>

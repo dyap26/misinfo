@@ -51,7 +51,14 @@ def get_article_title(url: str) -> str:
     try:
         response = httpx.get(url, headers=HEADERS, timeout=10, follow_redirects=True)
         soup = BeautifulSoup(response.text, "lxml")
-        return _extract_title(soup)
+        tag = (
+            soup.find("meta", attrs={"property": "og:title"})
+            or soup.find("meta", attrs={"name": "title"})
+        )
+        if tag:
+            return tag.get("content", "").strip()
+        title_tag = soup.find("title")
+        return title_tag.get_text(strip=True) if title_tag else ""
     except Exception:
         return ""
 
