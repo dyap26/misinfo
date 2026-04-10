@@ -11,11 +11,9 @@ logger = logging.getLogger(__name__)
 
 SCORER_RATE_LIMIT_DELAY = 0.2  # seconds between scoring requests
 
-
 def _scrape_article(article: dict) -> dict:
-    """Scrape one article, return it enriched. Never raises."""
     try:
-        text = get_full_text(article)
+        text = get_full_text(article.get("url", ""))  # ← pass the URL string
         article["content"] = text or article.get("content") or article.get("description") or ""
     except Exception as e:
         logger.warning(f"Scrape failed for {article.get('url')}: {e}")

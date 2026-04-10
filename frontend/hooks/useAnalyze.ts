@@ -29,7 +29,7 @@ export function useAnalyze(): UseAnalyzeReturn {
     setSingleResult(null);
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
+    const timeout = setTimeout(() => controller.abort(), 120000); // 2 minutes until timeout.
 
     try {
       const params = new URLSearchParams({ num_articles: String(numArticles) });
