@@ -9,6 +9,7 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
+import { usePostHog } from "posthog-react-native";
 import { RootStackParamList } from "../App";
 import { useAnalyze } from "../hooks/useAnalyze";
 import { ArticleCard } from "../components/ArticleCard";
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export function ResultsScreen({ navigation, route }: Props) {
+  const posthog = usePostHog();
   const [searchText, setSearchText] = useState("");
   const { keyword, url, category, numArticles } = route.params;
   const { articles, singleResult, loading, error, analyze, analyzeUrl } = useAnalyze();
@@ -32,6 +34,36 @@ export function ResultsScreen({ navigation, route }: Props) {
       analyze(keyword, category, numArticles);
     }
   }, []);
+
+  useEffect(() => {
+    if (!loading && !error) {
+      const displayArticles = singleResult ? [singleResult] : articles;
+      if (displayArticles.length > 0) {
+        posthog.capture('results_viewed', {
+          search_type: url ? 'url' : 'keyword',
+          keyword: keyword ?? null,
+          category: category ?? null,
+          num_articles: displayArticles.length,
+        });
+      } else if (displayArticles.length === 0) {
+        posthog.capture('no_articles_found', {
+          keyword: keyword ?? null,
+          category: category ?? null,
+        });
+      }
+    }
+  }, [loading, error, articles, singleResult]);
+
+  useEffect(() => {
+    if (!loading && error) {
+      posthog.capture('error_state_displayed', {
+        search_type: url ? 'url' : 'keyword',
+        keyword: keyword ?? null,
+        category: category ?? null,
+        error_message: error,
+      });
+    }
+  }, [loading, error]);
 
   // Update loading screen
   if (loading) return (

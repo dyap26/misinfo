@@ -17,11 +17,13 @@ import {
   DMSans_700Bold,
 } from '@expo-google-fonts/dm-sans';
 import { View, ActivityIndicator } from 'react-native';
+import { PostHogProvider } from 'posthog-react-native';
 
 import { HomeScreen } from './app/HomeScreen';
 import { ResultsScreen } from './app/ResultsScreen';
 import { Category } from './types';
 import { COLORS } from './constants';
+import { posthog } from './lib/posthog';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -56,16 +58,18 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          animation: 'fade',
-          contentStyle: { backgroundColor: COLORS.background },
-        }}
-      >
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Results" component={ResultsScreen} />
-      </Stack.Navigator>
+      <PostHogProvider client={posthog} autocapture={{ captureTouches: true, captureScreens: false }}>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+            animation: 'fade',
+            contentStyle: { backgroundColor: COLORS.background },
+          }}
+        >
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="Results" component={ResultsScreen} />
+        </Stack.Navigator>
+      </PostHogProvider>
     </NavigationContainer>
   );
 }

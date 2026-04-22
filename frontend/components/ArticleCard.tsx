@@ -10,6 +10,7 @@ import {
     UIManager,
     View,
 } from "react-native";
+import { usePostHog } from "posthog-react-native";
 import { COLORS, FONTS } from "../constants";
 import { Article } from "../types";
 import { ClassificationBadge } from "./ClassificationBadge";
@@ -25,6 +26,7 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({ article, index }: ArticleCardProps) {
+  const posthog = usePostHog();
   const [expanded, setExpanded] = useState(false);
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(16)).current;
@@ -48,11 +50,26 @@ export function ArticleCard({ article, index }: ArticleCardProps) {
 
   const toggle = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setExpanded((v) => !v);
+    const nextExpanded = !expanded;
+    setExpanded(nextExpanded);
+    if (nextExpanded) {
+      posthog.capture('article_expanded', {
+        classification: article.classification,
+        overall_score: article.overall_score,
+        source: article.source,
+      });
+    }
   };
 
   const openUrl = () => {
-    if (article.url) Linking.openURL(article.url);
+    if (article.url) {
+      posthog.capture('article_link_opened', {
+        classification: article.classification,
+        overall_score: article.overall_score,
+        source: article.source,
+      });
+      Linking.openURL(article.url);
+    }
   };
 
   return (
