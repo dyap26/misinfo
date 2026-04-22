@@ -18,5 +18,5 @@ export const posthog = new PostHog(apiKey || 'placeholder_key', {
   captureAppLifecycleEvents: true,
   flushAt: 20,
   flushInterval: 10000,
-  storage: AsyncStorage,
+  customStorage: AsyncStorage,
 })

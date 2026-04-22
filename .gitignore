@@ -48,3 +48,6 @@ venv/
 
 # Editor
 .vscode/
+
+*.claude
+*/posthog-setup-report.md
