@@ -11,6 +11,7 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
+import { usePostHog } from "posthog-react-native";
 import { RootStackParamList } from "../App";
 import { useAnalyze } from "../hooks/useAnalyze";
 import { CATEGORIES, COLORS, FONTS } from "../constants";
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export function HomeScreen({ navigation }: Props) {
+  const posthog = usePostHog();
   const [keyword, setKeyword] = useState("");
   const [category, setCategory] = useState<Category | undefined>(undefined);
   const [numArticles, setNumArticles] = useState(5);
@@ -48,11 +50,17 @@ export function HomeScreen({ navigation }: Props) {
 
   const handleSearch = async () => {
     if (!keyword.trim()) return;
+    posthog.capture('keyword_search_submitted', {
+      keyword: keyword.trim(),
+      category: category ?? null,
+      num_articles: numArticles,
+    });
     navigation.navigate('Results', { keyword: keyword.trim(), category, numArticles });
   };
-  
+
   const handleUrlSearch = async () => {
     if (!urlInput.trim()) return;
+    posthog.capture('url_search_submitted');
     navigation.navigate('Results', { url: urlInput.trim(), numArticles: 1 });
   };
 
@@ -75,7 +83,7 @@ export function HomeScreen({ navigation }: Props) {
         <View style={styles.tabRow}>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'keyword' && styles.tabActive]}
-            onPress={() => setActiveTab('keyword')}
+            onPress={() => { setActiveTab('keyword'); posthog.capture('search_tab_switched', { tab: 'keyword' }); }}
           >
             <Text style={[styles.tabLabel, activeTab === 'keyword' && styles.tabLabelActive]}>
               KEYWORD
@@ -83,7 +91,7 @@ export function HomeScreen({ navigation }: Props) {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'url' && styles.tabActive]}
-            onPress={() => setActiveTab('url')}
+            onPress={() => { setActiveTab('url'); posthog.capture('search_tab_switched', { tab: 'url' }); }}
           >
             <Text style={[styles.tabLabel, activeTab === 'url' && styles.tabLabelActive]}>
               URL
@@ -153,7 +161,7 @@ export function HomeScreen({ navigation }: Props) {
                     styles.categoryChip,
                     selected && styles.categoryChipSelected,
                   ]}
-                  onPress={() => setCategory(cat.value as Category | undefined)}
+                  onPress={() => { setCategory(cat.value as Category | undefined); posthog.capture('category_selected', { category: cat.value ?? 'all' }); }}
                   activeOpacity={0.7}
                 >
                   <Text
@@ -181,7 +189,7 @@ export function HomeScreen({ navigation }: Props) {
                   styles.countChip,
                   numArticles === n && styles.countChipSelected,
                 ]}
-                onPress={() => setNumArticles(n)}
+                onPress={() => { setNumArticles(n); posthog.capture('article_count_changed', { count: n }); }}
                 activeOpacity={0.7}
               >
                 <Text

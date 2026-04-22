@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { usePostHog } from "posthog-react-native";
 import { API_BASE_URL } from "../constants";
 import { Article, Category } from "../types";
 
@@ -13,6 +14,7 @@ interface UseAnalyzeReturn {
 }
 
 export function useAnalyze(): UseAnalyzeReturn {
+  const posthog = usePostHog();
   const [articles, setArticles] = useState<Article[]>([]);
   const [singleResult, setSingleResult] = useState<Article | null>(null);
   const [loading, setLoading] = useState(false);
@@ -42,9 +44,35 @@ export function useAnalyze(): UseAnalyzeReturn {
       if (!res.ok) throw new Error(`Server error: ${res.status}`);
       const data = await res.json();
       setArticles(data.articles);
+      posthog.capture('analysis_completed', {
+        keyword,
+        category: category ?? null,
+        num_articles_requested: numArticles,
+        num_articles_returned: data.articles?.length ?? 0,
+      });
     } catch (e: any) {
       clearTimeout(timeout);
-      setError(e.name === 'AbortError' ? 'Request timed out.' : e.message ?? 'Something went wrong.');
+      const isTimeout = e.name === 'AbortError';
+      const message = isTimeout ? 'Request timed out.' : e.message ?? 'Something went wrong.';
+      setError(message);
+      posthog.capture('analysis_failed', {
+        keyword,
+        category: category ?? null,
+        is_timeout: isTimeout,
+        error_message: message,
+      });
+      if (!isTimeout) {
+        posthog.capture('$exception', {
+          $exception_list: [
+            {
+              type: e.name ?? 'Error',
+              value: message,
+              stacktrace: { type: 'raw', frames: e.stack ?? '' },
+            },
+          ],
+          $exception_source: 'useAnalyze.analyze',
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -73,9 +101,33 @@ export function useAnalyze(): UseAnalyzeReturn {
       }
       const data: Article = await res.json();
       setSingleResult(data);
+      posthog.capture('url_analysis_completed', {
+        classification: data.classification,
+        overall_score: data.overall_score,
+        source: data.source,
+      });
     } catch (e: any) {
       clearTimeout(timeout);
-      setError(e.name === 'AbortError' ? 'Request timed out.' : e.message ?? 'Something went wrong.');
+      const isTimeout = e.name === 'AbortError';
+      const message = isTimeout ? 'Request timed out.' : e.message ?? 'Something went wrong.';
+      setError(message);
+      posthog.capture('analysis_failed', {
+        search_type: 'url',
+        is_timeout: isTimeout,
+        error_message: message,
+      });
+      if (!isTimeout) {
+        posthog.capture('$exception', {
+          $exception_list: [
+            {
+              type: e.name ?? 'Error',
+              value: message,
+              stacktrace: { type: 'raw', frames: e.stack ?? '' },
+            },
+          ],
+          $exception_source: 'useAnalyze.analyzeUrl',
+        });
+      }
     } finally {
       setLoading(false);
     }
