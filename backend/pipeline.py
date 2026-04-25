@@ -14,11 +14,13 @@ SCORER_RATE_LIMIT_DELAY = 0.2  # seconds between scoring requests
 
 def _scrape_article(article: dict) -> dict:
     try:
-        text = get_full_text(article.get("url", ""))
+        text, published_date = get_full_text(article.get("url", ""))
         article["content"] = text or article.get("content") or article.get("description") or ""
+        article["published_date"] = published_date  # NEW
     except Exception as e:
         logger.warning(f"Scrape failed for {article.get('url')}: {e}")
         article["content"] = article.get("description") or ""
+        article["published_date"] = None  # NEW
     return article
 
 

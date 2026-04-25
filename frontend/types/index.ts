@@ -30,6 +30,7 @@ export interface Article {
   strengths: string[];
   scores: ArticleScores;
   scrape_status?: 'ok' | 'paywall' | 'scrape_failed';
+  published_date?: string | null;
 }
 
 // Check if I need to add this in.

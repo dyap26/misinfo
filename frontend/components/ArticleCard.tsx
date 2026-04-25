@@ -20,6 +20,20 @@ if (Platform.OS === "android") {
   UIManager.setLayoutAnimationEnabledExperimental?.(true);
 }
 
+function formatDate(iso: string | undefined | null): string | null {
+  if (!iso) return null;
+  try {
+    const [year, month, day] = iso.split("-").map(Number);
+    return new Date(year, month - 1, day).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  } catch {
+    return null;
+  }
+}
+
 interface ArticleCardProps {
   article: Article;
   index: number;
@@ -83,6 +97,9 @@ export function ArticleCard({ article, index }: ArticleCardProps) {
             <ClassificationBadge classification={article.classification} />
             <Text style={styles.source} numberOfLines={1}>
               {article.source}
+              {formatDate(article.published_date)
+                ? `  ·  ${formatDate(article.published_date)}`
+                : ""}
             </Text>
           </View>
           <ScoreRing score={article.overall_score} />
