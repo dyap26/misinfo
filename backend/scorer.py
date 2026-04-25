@@ -3,15 +3,45 @@ import json
 import logging
 import os
 import re
+from datetime import date
 from dotenv import load_dotenv
 from pathlib import Path
+
+from web_context import fetch_web_context
+from source_memory import get_source_history, get_similar_articles, record_source, collection_size
 
 load_dotenv(Path(__file__).resolve().parent / ".env.local")
 
 logger = logging.getLogger(__name__)
 client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-# The main scoring prompt that is sent to Claude.
+# --- Prompts ---
+
+CONTEXT_BLOCK = """\
+=== SCORING CONTEXT ===
+
+TODAY'S DATE: {today}
+Your training data has a knowledge cutoff that may predate this article.
+Do NOT treat unfamiliar geopolitical events, conflicts, or political developments
+as fabricated or misinformation simply because they postdate your training.
+If an article is from a reputable outlet and internally consistent, treat
+unfamiliar current events as potentially real. Focus your credibility assessment
+on sourcing quality, journalistic standards, and framing — not on whether the
+events match your prior world knowledge.
+
+SOURCE HISTORY:
+{source_history}
+
+SIMILAR ARTICLES PREVIOUSLY SCORED:
+{similar_articles}
+
+CURRENT EVENTS CONTEXT:
+{web_context}
+
+=== END CONTEXT ===
+
+"""
+
 SCORING_PROMPT = """
 You are a media literacy and fact-checking expert with deep knowledge of journalistic standards.
 
@@ -37,6 +67,7 @@ DIMENSIONS:
 1. source_reputation (0–10)
    Does this outlet have a track record of accuracy? Is it an established, known publication?
    Consider: editorial standards, history of corrections, known bias or funding sources.
+   Use the SOURCE HISTORY above if available — it reflects this system's own scoring record for this outlet.
 
 2. evidence_quality (0–10)
    Are claims supported by named sources, experts, data, or documents?
@@ -122,6 +153,8 @@ WEIGHTS = {
 }
 
 
+# --- Helpers ---
+
 def _strip_fences(text: str) -> str:
     match = re.search(r"```(?:json)?\s*([\s\S]*?)```", text)
     return match.group(1).strip() if match else text.strip()
@@ -147,44 +180,69 @@ def _fallback(article: dict, reason: str) -> dict:
     }
 
 
+# --- Main ---
+
 def score_article(article: dict) -> dict:
     if not article.get("content") or len(article.get("content", "")) < 50:
         logger.warning(f"Skipping '{article.get('title')}' — insufficient content")
         return _fallback(article, reason="Insufficient content to score")
 
-    prompt = (SCORING_PROMPT
-        .replace("{title}", article.get("title", "Unknown"))
-        .replace("{source}", article.get("source", "Unknown"))
-        .replace("{content}", article.get("content", ""))
+    title = article.get("title", "Unknown")
+    source = article.get("source", "Unknown")
+    content = article.get("content", "")
+
+    # Build context block
+    source_history = get_source_history(source)
+    similar_articles = get_similar_articles(title, content)
+    web_context = fetch_web_context(title)
+
+    context = CONTEXT_BLOCK.format(
+        today=date.today().strftime("%B %d, %Y"),
+        source_history=source_history or f"No prior scoring history for {source}.",
+        similar_articles=similar_articles or "No similar articles found in history.",
+        web_context=web_context or "No current events context retrieved.",
+    )
+
+    prompt = (
+        context
+        + SCORING_PROMPT
+            .replace("{title}", title)
+            .replace("{source}", source)
+            .replace("{content}", content)
     )
 
     try:
         response = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=2048,                                                                            # change this if you want to modify the token usage
+            max_tokens=2048,
             messages=[{"role": "user", "content": prompt}]
         )
         if response.stop_reason == "max_tokens":
-          logger.warning(f"Response truncated for '{article.get('title')}' — increase max_tokens")
-          return _fallback(article, reason="Response truncated by max_tokens limit")
+            logger.warning(f"Response truncated for '{title}' — increase max_tokens")
+            return _fallback(article, reason="Response truncated by max_tokens limit")
     except anthropic.APIError as e:
-        logger.error(f"API error for '{article.get('title')}': {e}")
+        logger.error(f"API error for '{title}': {e}")
         return _fallback(article, reason=f"API error: {e}")
 
     raw = _strip_fences(response.content[0].text)
-    logger.debug(f"Raw response for '{article.get('title')}':\n{raw[:500]}")
+    logger.debug(f"Raw response for '{title}':\n{raw[:500]}")
 
     try:
         scored = json.loads(raw)
     except json.JSONDecodeError as e:
-      logger.warning(f"JSON parse failed for '{article.get('title')}': {e}\nFull raw:\n{raw}")
-      return _fallback(article, reason="LLM returned malformed JSON")
+        logger.warning(f"JSON parse failed for '{title}': {e}\nFull raw:\n{raw}")
+        return _fallback(article, reason="LLM returned malformed JSON")
 
     if "scores" not in scored or "classification" not in scored:
-        logger.warning(f"Missing keys in scorer response for '{article.get('title')}'")
+        logger.warning(f"Missing keys in scorer response for '{title}'")
         return _fallback(article, reason="Incomplete scorer response")
 
     scored["scores"] = _validate_scores(scored["scores"])
     scored["overall_score"] = _compute_score(scored["scores"])
 
-    return {**article, **scored}
+    result = {**article, **scored}
+
+    # Persist to source memory so future runs benefit from this score
+    record_source(result)
+
+    return result
