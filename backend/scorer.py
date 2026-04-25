@@ -178,6 +178,11 @@ def _fallback(article: dict, reason: str) -> dict:
         "reasoning": reason,
         "red_flags": [],
         "strengths": [],
+        # Explicitly preserve — no spread can overwrite these
+        "published_date": article.get("published_date"),
+        "url": article.get("url"),
+        "source": article.get("source"),
+        "scrape_status": article.get("scrape_status"),
     }
 
 
@@ -243,6 +248,10 @@ def score_article(article: dict) -> dict:
     scored["overall_score"] = _compute_score(scored["scores"])
 
     result = {**article, **scored}
+
+    # Ensure scorer output never clobbers source metadata
+    for key in ("url", "source", "published_date", "scrape_status"):
+        result[key] = article.get(key)
 
     # Persist to source memory so future runs benefit from this score
     record_source(result)

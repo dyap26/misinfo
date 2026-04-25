@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 SCORER_RATE_LIMIT_DELAY = 0.2  # seconds between scoring requests
 
-
 def _scrape_article(article: dict) -> dict:
     try:
         text, published_date = get_full_text(article.get("url", ""))
