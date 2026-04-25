@@ -11,9 +11,10 @@ logger = logging.getLogger(__name__)
 
 SCORER_RATE_LIMIT_DELAY = 0.2  # seconds between scoring requests
 
+
 def _scrape_article(article: dict) -> dict:
     try:
-        text = get_full_text(article.get("url", ""))  # ← pass the URL string
+        text = get_full_text(article.get("url", ""))
         article["content"] = text or article.get("content") or article.get("description") or ""
     except Exception as e:
         logger.warning(f"Scrape failed for {article.get('url')}: {e}")
@@ -37,7 +38,8 @@ def run_pipeline(keyword: str, num_articles: int = 10, category: str = None) -> 
     """
     Full pipeline: fetch → scrape → score → rank.
     - Scraping is parallelized (I/O bound)
-    - Scoring is rate-limited to avoid LLM API throttling
+    - Scoring is sequential + rate-limited to avoid LLM API throttling
+    - Each scored article is persisted to source memory automatically (inside scorer)
     """
     logger.info(f"Starting pipeline for keyword: '{keyword}'")
 
@@ -54,7 +56,7 @@ def run_pipeline(keyword: str, num_articles: int = 10, category: str = None) -> 
     enriched = [a for a in enriched if len(a.get("content", "")) > 50]
     logger.info(f"Scraping complete. {len(enriched)}/{len(articles)} articles have content.")
 
-    # Step 3: Score with rate limiting
+    # Step 3: Score with rate limiting (sequential — max_workers=1)
     scored = []
     failed = 0
 
