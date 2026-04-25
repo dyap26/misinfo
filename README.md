@@ -33,10 +33,13 @@ A mobile/web app dedicated to reviewing news articles for misinformation using C
     ```bash
     NEWS_API_KEY = your_news_api_key
     ANTHROPIC_API_KEY = your_anthropic_api_key
+    TAVILY_API_KEY = your_tavily_api_key
     ```
     Create a `.env.local` file in the frontend folder with the following variables:
     ```bash
     EXPO_PUBLIC_API_BASE_URL = your_backend_url # e.g. http://192.168.x.x:8000
+    EXPO_PUBLIC_POSTHOG_KEY=your_posthog_key
+    EXPO_PUBLIC_POSTHOG_HOST=your_posthog_host
     ```
 5. Test the Backend <br>
     There are a couple different ways to test the backend from the terminal. The most simple is just by using a keyword/phrase:
@@ -69,7 +72,7 @@ A mobile/web app dedicated to reviewing news articles for misinformation using C
     * `technology`
 
 6. Start Development Server <br>
-    To test the whole app locally, you will need two terminal tabs open.
+    To test the entire app locally, you will need two terminal tabs open.
     * Backend:
         ``` bash
         cd backend
