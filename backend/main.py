@@ -38,7 +38,7 @@ async def analyze_url(payload: dict):
         raise HTTPException(status_code=400, detail="URL is required")
 
     try:
-        content = get_full_text(url)
+        content, published_date = get_full_text(url)
         status = "ok" if content else "scrape_failed"
 
         article = {
@@ -47,6 +47,7 @@ async def analyze_url(payload: dict):
             "url": url,
             "content": content or "",
             "scrape_status": status,
+            "published_date": published_date,
         }
 
         # Content unable to be scraped...
@@ -90,6 +91,7 @@ if __name__ == "__main__":
         print(f"{'='*60}")
         print(f"[{i}] {article.get('title', 'No title')}")
         print(f"    Source         : {article.get('source', 'Unknown')}")
+        print(f"    Published      : {article.get('published_date') or 'Unknown'}")  # NEW
         print(f"    Score          : {article.get('overall_score', 'N/A')}/10")
         print(f"    Classification : {article.get('classification', 'N/A').upper()}")
         print(f"    Reasoning      : {article.get('reasoning', 'N/A')}")
@@ -101,7 +103,7 @@ if __name__ == "__main__":
 
     if args.url:
         print(f"\nAnalyzing URL: {args.url}\n")
-        content = get_full_text(args.url)
+        content, published_date = get_full_text(args.url)
         if not content:
             print("Could not extract content from URL.")
         else:
@@ -110,6 +112,7 @@ if __name__ == "__main__":
                 "source": _extract_domain(args.url),
                 "url": args.url,
                 "content": content,
+                "published_date": published_date,
             }
             result = score_article(article)
             print_article(result)

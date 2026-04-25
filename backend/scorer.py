@@ -21,6 +21,7 @@ CONTEXT_BLOCK = """\
 === SCORING CONTEXT ===
 
 TODAY'S DATE: {today}
+ARTICLE PUBLICATION DATE: {published_date}
 Your training data has a knowledge cutoff that may predate this article.
 Do NOT treat unfamiliar geopolitical events, conflicts, or political developments
 as fabricated or misinformation simply because they postdate your training.
@@ -198,6 +199,7 @@ def score_article(article: dict) -> dict:
 
     context = CONTEXT_BLOCK.format(
         today=date.today().strftime("%B %d, %Y"),
+        published_date=article.get("published_date") or "Unknown",
         source_history=source_history or f"No prior scoring history for {source}.",
         similar_articles=similar_articles or "No similar articles found in history.",
         web_context=web_context or "No current events context retrieved.",
