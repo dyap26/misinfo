@@ -9,6 +9,7 @@ from pathlib import Path
 
 from web_context import fetch_web_context
 from source_memory import get_source_history, get_similar_articles, record_source, collection_size
+from database import get_cached_article, needs_rescore, upsert_article, build_result_from_cache
 
 load_dotenv(Path(__file__).resolve().parent / ".env.local")
 
@@ -189,6 +190,18 @@ def _fallback(article: dict, reason: str) -> dict:
 # --- Main ---
 
 def score_article(article: dict) -> dict:
+    url = article.get("url")
+
+    # --- Cache check ---
+    if url:
+        cached = get_cached_article(url)
+        if cached and not needs_rescore(cached):
+            logger.info(f"Cache hit for '{article.get('title')}' — skipping scorer")
+            return build_result_from_cache(article, cached)
+        if cached:
+            logger.info(f"Cache stale for '{article.get('title')}' — re-scoring")
+
+    # --- Content guard ---
     if not article.get("content") or len(article.get("content", "")) < 50:
         logger.warning(f"Skipping '{article.get('title')}' — insufficient content")
         return _fallback(article, reason="Insufficient content to score")
@@ -255,5 +268,8 @@ def score_article(article: dict) -> dict:
 
     # Persist to source memory so future runs benefit from this score
     record_source(result)
+
+    # Persist to Supabase cache
+    upsert_article(result)
 
     return result

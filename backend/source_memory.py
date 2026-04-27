@@ -1,5 +1,6 @@
 import chromadb
 import logging
+import re
 import os
 from chromadb.utils import embedding_functions
 from collections import Counter
@@ -9,7 +10,6 @@ logger = logging.getLogger(__name__)
 CHROMA_PATH = os.getenv("CHROMA_PATH", "./chroma_db")
 COLLECTION_NAME = "source_history"
 
-# Local sentence-transformer — no extra API calls or keys needed
 _ef = embedding_functions.SentenceTransformerEmbeddingFunction(
     model_name="all-MiniLM-L6-v2"
 )
@@ -22,15 +22,30 @@ _collection = _client.get_or_create_collection(
 )
 
 
+# --- Helpers ---
+
+def _clean_source(source: str | None) -> str:
+    """
+    Strip markdown hyperlinks that terminals inject into domain strings.
+    e.g. '[foxnews.com](http://foxnews.com)' -> 'foxnews.com'
+    """
+    if not source:
+        return "unknown"
+    match = re.match(r'\[([^\]]+)\]\([^)]+\)', source)
+    return match.group(1) if match else source
+
+
+# --- Public API ---
+
 def record_source(article: dict) -> None:
     """
     Persist a scored article into the source history ledger.
-    Keyed by URL — safe to call multiple times (upsert).
+    Keyed by URL - safe to call multiple times (upsert).
     """
     url = article.get("url", "").strip()
-    source = article.get("source", "unknown").strip()
+    source = _clean_source(article.get("source", "").strip())
     if not url:
-        logger.debug("Skipping record_source — no URL on article")
+        logger.debug("Skipping record_source - no URL on article")
         return
 
     doc_text = f"{article.get('title', '')} {article.get('content', '')[:500]}"
@@ -46,7 +61,7 @@ def record_source(article: dict) -> None:
                 "title": article.get("title", "")[:500],
             }],
         )
-        logger.debug(f"Recorded source history for '{source}' — {url}")
+        logger.debug(f"Recorded source history for '{source}' - {url}")
     except Exception as e:
         logger.warning(f"Failed to record source '{source}': {e}")
 
@@ -56,7 +71,8 @@ def get_source_history(source: str) -> str:
     Return a plain-text summary of all past scores for a given source name.
     Returns empty string if no history exists yet.
     """
-    if not source:
+    source = _clean_source(source)
+    if not source or source == "unknown":
         return ""
 
     try:
@@ -86,7 +102,7 @@ def get_source_history(source: str) -> str:
         if avg is not None:
             parts.append(f"Average credibility score: {avg}/10.")
         if scores:
-            parts.append(f"Score range: {min(scores)}–{max(scores)}/10.")
+            parts.append(f"Score range: {min(scores)}-{max(scores)}/10.")
         if top_class:
             parts.append(f"Most common classification: {top_class}.")
         if classifications:
@@ -108,7 +124,8 @@ def collection_size() -> int:
         return _collection.count()
     except Exception:
         return 0
-    
+
+
 def get_similar_articles(title: str, content: str, n: int = 3) -> str:
     """
     Semantic search: find past articles similar to the current one.

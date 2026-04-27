@@ -14,3 +14,4 @@ feedparser==6.0.12
 chromadb
 sentence-transformers
 tavily-python
+supabase
