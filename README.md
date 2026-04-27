@@ -31,13 +31,15 @@ A mobile/web app dedicated to reviewing news articles for misinformation using C
     There are two .env.local files needed.
     Create a `.env.local` file in the backend folder with the following variables:
     ```bash
-    NEWS_API_KEY = your_news_api_key
-    ANTHROPIC_API_KEY = your_anthropic_api_key
-    TAVILY_API_KEY = your_tavily_api_key
+    NEWS_API_KEY=your_news_api_key
+    ANTHROPIC_API_KEY=your_anthropic_api_key
+    TAVILY_API_KEY=your_tavily_api_key
+    SUPABASE_URL=your_supabase_url
+    SUPABASE_SERVICE_KEY=your_supabase_service_key
     ```
     Create a `.env.local` file in the frontend folder with the following variables:
     ```bash
-    EXPO_PUBLIC_API_BASE_URL = your_backend_url # e.g. http://192.168.x.x:8000
+    EXPO_PUBLIC_API_BASE_URL=your_backend_url # e.g. http://192.168.x.x:8000
     EXPO_PUBLIC_POSTHOG_KEY=your_posthog_key
     EXPO_PUBLIC_POSTHOG_HOST=your_posthog_host
     ```
