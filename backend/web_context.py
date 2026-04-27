@@ -9,7 +9,7 @@ def fetch_web_context(topic: str, max_chars: int = 1500) -> str:
     """
     Fetch a real-time summary for a topic using Tavily Search.
     Used to ground the scorer against post-cutoff events.
-    Returns an empty string on failure — scorer degrades gracefully.
+    Returns an empty string on failure.
     """
     api_key = os.getenv("TAVILY_API_KEY")
     if not api_key:
