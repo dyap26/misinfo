@@ -234,7 +234,7 @@ def score_article(article: dict) -> dict:
     try:
         response = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=2048,
+            max_tokens=1500,
             messages=[{"role": "user", "content": prompt}]
         )
         if response.stop_reason == "max_tokens":
