@@ -1,10 +1,10 @@
 # Misinformation App
 
-A mobile/web app dedicated to reviewing news articles for misinformation using Claude AI. Built with Expo, TypeScript, and Python. Deployed using Vercel at https://misinfo-green.vercel.app/.
+A mobile/web app to evaluate news articles for misinformation using Claude AI. Built with Expo, TypeScript, and Python. Deployed using Vercel at https://misinfo-green.vercel.app/.
 
 ## App Functionality
 * Search for multiple news articles and their misinformation scores using a keyword/keyphrase.
-* Score an article for misinformation by entering their link.
+* Score an article for misinformation by entering their URL.
 
 ## Getting Started
 
@@ -36,6 +36,7 @@ A mobile/web app dedicated to reviewing news articles for misinformation using C
     TAVILY_API_KEY=your_tavily_api_key
     SUPABASE_URL=your_supabase_url
     SUPABASE_SERVICE_KEY=your_supabase_service_key
+    HF_TOKEN=your_hf_token
     ```
     Create a `.env.local` file in the frontend folder with the following variables:
     ```bash
@@ -92,7 +93,6 @@ A mobile/web app dedicated to reviewing news articles for misinformation using C
     * Press 'a' for Android emulator
     * Press 'w' for web browser
   
-
 ## **Agent Implementation**
 
 **Processing Flow:**
@@ -104,6 +104,8 @@ A mobile/web app dedicated to reviewing news articles for misinformation using C
 **Model Configuration:**
    * Model: `claude-sonnet-4-6`
    * Max Tokens Per Article: 2048
+
+To reduce token usage, implement a database to store articles and their scores. I personally like using Supabase and that's what is implemented here. If you don't want to, that's also cool.
 
 ## Scoring
 
