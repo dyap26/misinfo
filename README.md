@@ -131,10 +131,10 @@ This is not an exhaustive list of limitations. There are still some for you to f
         * Most academic journals
 * Claude Specific:
     * Claude may not have the most up-to-date information to cross-reference facts in articles.
-    * AI in general is not always the most trustworthy :( 
+    * AI in general is not always the most trustworthy and can also spread misinformation :( 
     
 ## A General Note
-If you plan to use the information the app gives you in any academic or journalistic setting, please read the article as well and make your own inferences. I am not liable for any false information given by the scorer.
+If you plan to use the information the app gives you in any academic or journalistic setting, please read the article as well and make your own judgments. I am not liable for any false information given by the scorer.
 
 ## Contributing
 Contributions are always welcome! Feel free to submit a pull request.
