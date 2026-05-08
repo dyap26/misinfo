@@ -2,6 +2,8 @@
 
 A mobile/web app to evaluate news articles for misinformation using Claude AI. Built with Expo, TypeScript, and Python. Deployed using Vercel at https://misinfo-green.vercel.app/.
 
+![Home Screen](images/homescreen.png)
+
 ## App Functionality
 * Search for multiple news articles and their misinformation scores using a keyword/keyphrase.
 * Score an article for misinformation by entering their URL.
@@ -103,7 +105,7 @@ A mobile/web app to evaluate news articles for misinformation using Claude AI. B
 
 **Model Configuration:**
    * Model: `claude-sonnet-4-6`
-   * Max Tokens Per Article: 2048
+   * Max Tokens Per Article: 1500
 
 To reduce token usage, implement a database to store articles and their scores. I personally like using Supabase and that's what is implemented here. If you don't want to, that's also cool.
 
